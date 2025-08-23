@@ -136,4 +136,14 @@ const editUser = async (req, res, next) => {
     }
 }
 
-module.exports = { register, login, deleteUser, editUser };
+const showUsers = async (req, res, next) => {
+    try {
+        const users = await User.find()
+        res.status(400).json({ users });
+    } catch (error) {
+        console.log("error show users " + error)
+        res.status(400).json({ message: "error for show users" })
+    }
+}
+
+module.exports = { register, login, deleteUser, editUser, showUsers };
