@@ -31,16 +31,16 @@ const register = async (req, res, next) => {
                 password: user.password,
                 role: user.role,
                 token: jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" })
+
             })
+
+
             console.log("user created!")
         }
 
         else {
             res.status(400).json({ message: "invalid user data" })
         }
-
-
-
 
     } catch (error) {
         console.log("register error " + error)
@@ -86,23 +86,16 @@ const login = async (req, res, next) => {
     }
 
 }
-
 const deleteUser = async (req, res, next) => {
     try {
-        const { email } = req.body;
+        const { id } = req.params;
 
-        if (!email) {
-            return res.status(400).json({ message: "Email is required" });
-        }
+        if (!id) return res.status(400).json({ message: "id is required" });
 
-        const user = await User.findOne({ email });
-        if (!user) {
-            console.log("user not exists");
-            return res.status(404).json({ message: "User not found" });
-        }
+        const user = await User.findById(id);
+        if (!user) return res.status(404).json({ message: "User not found" });
 
         await user.deleteOne();
-        console.log("user deleted");
         res.status(200).json({ message: "User deleted successfully" });
 
     } catch (error) {
@@ -110,11 +103,12 @@ const deleteUser = async (req, res, next) => {
         next(error);
     }
 };
+
 const editUser = async (req, res, next) => {
     try {
-        const { name, surname, email, password, role } = req.body;
+        const { name, surname, email, password, role, id } = req.body;
 
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ id });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }

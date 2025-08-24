@@ -8,9 +8,10 @@ const app = express();
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 
+
 app.use("/api/users", userRouter)
 app.use("/api/tickets", ticketRouter)
-
+//routers
 
 app.get("/", (req, res, next) => {
     res.json({
@@ -21,3 +22,4 @@ app.get("/", (req, res, next) => {
 app.listen(process.env.LOCAL_HOST_PORT, () => {
     console.log("server establiashed")
 })
+//server
