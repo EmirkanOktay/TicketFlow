@@ -9,6 +9,7 @@ ticketRouter.get("/show-tickets/:id", authMiddleware, ticketController.getTicket
 ticketRouter.put("/edit-ticket/:id", authMiddleware, ticketController.uptadeTicket);
 ticketRouter.put("/close-ticket/:id", authMiddleware, ticketController.closeTicket)
 ticketRouter.delete("/delete-ticket/:id", authMiddleware, ticketController.deleteTicket);
+ticketRouter.get("/show-tickets-status", authMiddleware, ticketController.showTicketsByStatus);
 module.exports = ticketRouter
 
 //routers for ticket system

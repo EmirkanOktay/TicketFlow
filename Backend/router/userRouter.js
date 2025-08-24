@@ -8,6 +8,7 @@ userRouter.post("/login", userController.login);
 userRouter.delete("/delete-user/:id", authMiddleware, adminMiddleware, userController.deleteUser)
 userRouter.put("/edit-user/:id", authMiddleware, userController.editUser)
 userRouter.get("/show-all-employeers", authMiddleware, adminMiddleware, userController.showUsers)
+userRouter.get("/show-employeers", authMiddleware, userController.showUsersByRole);
 
 module.exports = userRouter
 

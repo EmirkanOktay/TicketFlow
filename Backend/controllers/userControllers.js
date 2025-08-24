@@ -139,5 +139,27 @@ const showUsers = async (req, res, next) => {
         res.status(400).json({ message: "error for show users" })
     }
 }
+const showUsersByRole = async (req, res, next) => {
+    try {
+        const userRole = req.user.role;
+        const role = req.query.role;
+        let filter = {};
 
-module.exports = { register, login, deleteUser, editUser, showUsers };
+        if (role) filter.role = role;
+
+        if (userRole !== "Admin" && userRole !== "IT") {
+            filter._id = req.user.id;
+        }
+
+        const users = await User.find(filter).select("name surname email role");
+
+        res.status(200).json({ users });
+    } catch (error) {
+        console.error("Show users by role error:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+
+module.exports = { register, login, deleteUser, editUser, showUsers, showUsersByRole };

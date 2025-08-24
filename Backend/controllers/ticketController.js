@@ -38,7 +38,7 @@ const getTickets = async (req, res, next) => {
         else {
             tickets = await Ticket.find({ createdBy: req.user.id }).populate("createdBy", "name surname email").populate("closedBy", "name surname email role");
         }
-        res.status(200).json(tickets);
+        res.status(200).json({ tickets });
 
     } catch (error) {
         console.log("error while getting tickets " + error);
@@ -159,7 +159,29 @@ const closeTicket = async (req, res, next) => {
     }
 };
 
+const showTicketsByStatus = async (req, res, next) => {
+    try {
+        const userRole = req.user.role;
+        const userId = req.user.id;
+        const status = req.query.status;
 
+        let filter = {};
+        if (status) filter.status = status;
+
+        if (userRole !== "Admin" && userRole !== "IT") {
+            filter.createdBy = userId;
+        }
+
+        const tickets = await Ticket.find(filter)
+            .populate("createdBy", "name surname email")
+            .populate("closedBy", "name surname email role");
+
+        res.status(200).json({ tickets });
+    } catch (error) {
+        console.error("Tickets error:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
 const deleteTicket = async (req, res, next) => {
     try {
         const ticket = await Ticket.findById(req.params.id);
@@ -183,4 +205,4 @@ const deleteTicket = async (req, res, next) => {
     }
 }
 
-module.exports = { createTicket, getTickets, getTicketById, uptadeTicket, closeTicket, deleteTicket }
+module.exports = { createTicket, getTickets, getTicketById, uptadeTicket, closeTicket, deleteTicket, showTicketsByStatus }
