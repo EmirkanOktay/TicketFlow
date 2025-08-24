@@ -4,12 +4,18 @@ const createTicket = async (req, res, next) => {
     try {
         const { title, description, category, priority } = req.body;
 
+        const attachments = req.files ? req.files.map(file => ({
+            fileName: file.filename,
+            fileUrl: "/uploads/" + file.filename
+        })) : [];
+
         const ticket = await Ticket.create({
             title,
             description,
             category,
             priority,
             createdBy: req.user.id,
+            attachments
         });
 
         const populatedTicket = await Ticket.findById(ticket._id)
