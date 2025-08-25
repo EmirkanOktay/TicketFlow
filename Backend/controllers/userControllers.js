@@ -22,22 +22,27 @@ const register = async (req, res, next) => {
             password: hash,
             role
         })
-
+        if (user.role == "It") {
+            user.ticketCloseCount = 0;
+        }
+        if (user.role == 'Employee') {
+            user.ticketCreatedCount = 0;
+        }
         if (user) {
             res.status(201).json({
                 _id: user.id,
                 name: user.name,
                 surname: user.surname,
+                email: user.email,
                 password: user.password,
                 role: user.role,
-                token: jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" })
+                token: jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" }),
+                ticketCreatedCount: (user.role == 'Employee') ? user.ticketCreatedCount : null,
+                ticketCloseCount: (user.role == 'It') ? user.ticketCloseCount : null
 
             })
-
-
             console.log("user created!")
         }
-
         else {
             res.status(400).json({ message: "invalid user data" })
         }
@@ -151,7 +156,7 @@ const showUsersByRole = async (req, res, next) => {
             filter._id = req.user.id;
         }
 
-        const users = await User.find(filter).select("name surname email role");
+        const users = await User.find(filter).select("name surname email role ticketCloseCount ticketCreatedCount");
 
         res.status(200).json({ users });
     } catch (error) {

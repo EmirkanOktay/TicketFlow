@@ -1,4 +1,7 @@
 const Ticket = require("../models/ticketModel");
+const fs = require("fs");
+const path = require("path");
+const User = require("../models/userModel");
 
 const createTicket = async (req, res, next) => {
     try {
@@ -9,6 +12,8 @@ const createTicket = async (req, res, next) => {
             fileUrl: "/uploads/" + file.filename
         })) : [];
 
+        const userRole = req.user.role;
+
         const ticket = await Ticket.create({
             title,
             description,
@@ -17,9 +22,16 @@ const createTicket = async (req, res, next) => {
             createdBy: req.user.id,
             attachments
         });
+        if (userRole == 'Employee') {
+            const user = await User.findById(req.user.id);
+            user.ticketCreatedCount = (user.ticketCreatedCount || 0) + 1;
+            await user.save();
+        }
 
         const populatedTicket = await Ticket.findById(ticket._id)
             .populate("createdBy", "name surname email role");
+
+
 
         res.status(201).json(populatedTicket);
         console.log("ticket created!");
@@ -29,7 +41,6 @@ const createTicket = async (req, res, next) => {
         res.status(500).json({ message: "ticket error" });
     }
 }
-
 
 const getTickets = async (req, res, next) => {
     try {
@@ -127,7 +138,6 @@ const closeTicket = async (req, res, next) => {
 
         const userRole = req.user.role;
         const userId = req.user.id;
-
         if (
             !(
                 userRole === "Admin" ||
@@ -137,10 +147,16 @@ const closeTicket = async (req, res, next) => {
         ) {
             return res.status(403).json({ message: "Not authorized to close this ticket" });
         }
-
+        if (userRole == 'It') {
+            const user = await User.findById(req.user.id);
+            user.ticketCloseCount = (user.ticketCloseCount || 0) + 1;
+            await user.save();
+        }
         ticket.status = "closed";
         ticket.closedBy = req.user.id;
         ticket.closedDate = new Date();
+
+
         if (!req.body.result) {
             return res.status(400).json({ message: "ticket needs result for close" });
         }
@@ -192,21 +208,36 @@ const deleteTicket = async (req, res, next) => {
     try {
         const ticket = await Ticket.findById(req.params.id);
         const userRole = req.user.role;
+
         if (userRole == "Admin" || userRole == "Employee") {
             if (ticket) {
+
+                if (ticket.attachments && ticket.attachments.length > 0) {
+                    for (const file of ticket.attachments) {
+                        const filePath = path.join(__dirname, "../uploads", file.fileName);
+
+                        fs.unlink(filePath, (err) => {
+                            if (err) {
+                                console.error("Dosya silinemedi:", err.message);
+                            } else {
+                                console.log("Dosya silindi:", file.fileName);
+                            }
+                        });
+                    }
+                }
+
                 await ticket.deleteOne();
-                return res.status(200).json({ message: "Ticket deleted successfully" });
-            }
-            else {
+                return res.status(200).json({ message: "Ticket ve dosyaları silindi" });
+
+            } else {
                 return res.status(404).json({ message: "Ticket not found" });
             }
-        }
-        else {
+        } else {
             return res.status(403).json({ message: "Not authorized to close this ticket" });
         }
     }
     catch (error) {
-        console.log("ticket delete error" + error)
+        console.log("ticket delete error" + error);
         return res.status(500).json({ message: "Server error" });
     }
 }
