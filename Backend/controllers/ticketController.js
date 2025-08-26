@@ -2,8 +2,11 @@ const Ticket = require("../models/ticketModel");
 const fs = require("fs");
 const path = require("path");
 const User = require("../models/userModel");
+const sendMail = require("../utils/sendMail");
 
 const createTicket = async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
     try {
         const { title, description, category, priority } = req.body;
 
@@ -35,6 +38,18 @@ const createTicket = async (req, res, next) => {
 
         res.status(201).json(populatedTicket);
         console.log("ticket created!");
+
+        await sendMail({
+            to: user.email,
+            subject: "Your Ticket Has Been Created!",
+            html: `
+                Hello ${user.name},<br><br>
+                Your ticket "${ticket.title}" has been created.<br>
+                Our IT team will check your problem and contact you.<br><br>
+                Have a great day!<br>
+                This mail was sent automatically.
+            `
+        });
 
     } catch (error) {
         console.log("create ticket error  " + error);
@@ -172,6 +187,22 @@ const closeTicket = async (req, res, next) => {
         await ticket.save();
         const populatedTicket = await Ticket.findById(ticket._id)
             .populate("closedBy", "name surname email role");
+
+
+        await sendMail({
+            to: ticket.createdBy.email,
+            subject: "Your Ticket Has Been Closed!",
+            html: `
+                Hello ${ticket.createdBy.name},<br><br>
+                Your ticket "${ticket.title}" has been closed.<br>
+                Result: ${ticket.result}<br>
+                Closed by: ${req.user.name} (${req.user.role})<br>
+                Close duration: ${ticket.closeDuration}<br><br>
+                Have a great day!<br>
+                This mail was sent automatically.
+            `
+        });
+
 
         res.status(200).json({ message: "Ticket closed", populatedTicket });
 

@@ -69,6 +69,7 @@ const login = async (req, res, next) => {
         }
 
         const match = await bcrypt.compare(password, user.password);
+
         if (!match) {
             return res.status(400).json({ message: "wrong password" })
         }
@@ -78,16 +79,26 @@ const login = async (req, res, next) => {
         },
             process.env.JWT_SECRET, { expiresIn: "1d" })
 
-        res.status(200).json({
-            _id: user._id,
-            name: user.name,
-            surname: user.surname,
-            role: user.role,
-            token
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            maxAge: 24 * 60 * 60 * 1000,
+            sameSite: "strict"
         });
-        console.log("user found")
+
+        return res.status(200).json({
+            message: "Login successful",
+            user: {
+                _id: user._id,
+                name: user.name,
+                surname: user.surname,
+                role: user.role,
+                token
+            }
+        });
     } catch (error) {
-        console.log("login error " + " " + error)
+        console.log("login error:", error);
+        return res.status(500).json({ message: "Server error" });
     }
 
 }
@@ -111,7 +122,7 @@ const deleteUser = async (req, res, next) => {
 
 const editUser = async (req, res, next) => {
     try {
-        const { name, surname, email, password, role, id } = req.body;
+        const { name, surname, password, role, id } = req.body;
 
         const user = await User.findOne({ id });
         if (!user) {
