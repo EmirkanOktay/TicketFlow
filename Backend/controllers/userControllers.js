@@ -100,8 +100,22 @@ const login = async (req, res, next) => {
         console.log("login error:", error);
         return res.status(500).json({ message: "Server error" });
     }
-
 }
+
+const logout = async (req, res, next) => {
+    try {
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: false,
+            sameSite: "strict"
+        })
+        res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "server errror" });
+        console.log("error logout" + error)
+    }
+}
+
 const deleteUser = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -178,4 +192,4 @@ const showUsersByRole = async (req, res, next) => {
 
 
 
-module.exports = { register, login, deleteUser, editUser, showUsers, showUsersByRole };
+module.exports = { register, login, deleteUser, editUser, showUsers, showUsersByRole, logout };
