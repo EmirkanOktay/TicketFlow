@@ -13,4 +13,4 @@ userRouter.get("/show-employeers", authMiddleware, userController.showUsersByRol
 
 module.exports = userRouter
 
-//routers for userz
+//routers for users
