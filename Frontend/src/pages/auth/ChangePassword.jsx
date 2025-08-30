@@ -2,7 +2,7 @@ import { Box, Paper, TextField, Typography, Button } from "@mui/material";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import { Link } from "react-router-dom";
 
-const Login = () => {
+const ChangePassword = () => {
     return (
         <Box
             sx={{
@@ -26,6 +26,7 @@ const Login = () => {
                     color: "white",
                 }}
             >
+                {/* Icon */}
                 <Box
                     sx={{
                         width: 80,
@@ -44,7 +45,7 @@ const Login = () => {
                 </Box>
 
                 <Typography variant="h4" sx={{ fontWeight: "bold", mb: 4 }}>
-                    Welcome Back
+                    Reset Password
                 </Typography>
 
                 <Box component="form">
@@ -56,30 +57,15 @@ const Login = () => {
                         InputLabelProps={{ style: { color: "#cbd5e1" } }}
                         sx={{
                             input: { color: "#f1f5f9" },
-                            mb: 2,
-                            "& .MuiOutlinedInput-root": {
-                                borderRadius: 3,
-                                "& fieldset": { borderColor: "#475569" },
-                                "&:hover fieldset": { borderColor: "#f97316" },
-                                "&.Mui-focused fieldset": { borderColor: "#f97316", boxShadow: "0 0 8px #f97316" },
-                            },
-                        }}
-                    />
-
-                    <TextField
-                        fullWidth
-                        label="Password"
-                        type="password"
-                        margin="normal"
-                        InputLabelProps={{ style: { color: "#cbd5e1" } }}
-                        sx={{
-                            input: { color: "#f1f5f9" },
                             mb: 3,
                             "& .MuiOutlinedInput-root": {
                                 borderRadius: 3,
                                 "& fieldset": { borderColor: "#475569" },
                                 "&:hover fieldset": { borderColor: "#f97316" },
-                                "&.Mui-focused fieldset": { borderColor: "#f97316", boxShadow: "0 0 8px #f97316" },
+                                "&.Mui-focused fieldset": {
+                                    borderColor: "#f97316",
+                                    boxShadow: "0 0 8px #f97316",
+                                },
                             },
                         }}
                     />
@@ -100,17 +86,17 @@ const Login = () => {
                             },
                         }}
                     >
-                        Login
+                        Send Reset Link
                     </Button>
                 </Box>
 
                 <Typography variant="body2" sx={{ mt: 3, color: "#cbd5e1" }}>
-                    If you forget your password {""}
+                    Remember your password?{" "}
                     <Link
-                        to="/auth/reset-password"
+                        to="/auth/login"
                         style={{ textDecoration: "none", color: "#f97316", fontWeight: 500 }}
                     >
-                        Change Your Password
+                        Login
                     </Link>
                 </Typography>
             </Paper>
@@ -118,4 +104,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default ChangePassword;

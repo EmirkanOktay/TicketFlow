@@ -9,6 +9,7 @@ import Home from '../pages/Home'
 import NotFound from '../pages/notFound'
 import Login from '../pages/auth/Login'
 import Register from '../pages/auth/Register'
+import ChangePassword from '../pages/auth/changePassword'
 import PrivateRoute from '../routes/PrivateRouter'
 import AuhtLayout from '../layouts/AuthLayout'
 import DashboardLayout from '../layouts/DashboardLayout'
@@ -23,7 +24,9 @@ const AppRouter = () => {
                 <Route path="/auth" element={<AuhtLayout />}>
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
+                    <Route path="reset-password" element={<ChangePassword />} />
                 </Route>
+
           //auth pages
 
                 <Route
