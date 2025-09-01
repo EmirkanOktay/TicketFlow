@@ -10,7 +10,7 @@ userRouter.get("/show-user-infos", authMiddleware, userController.showUsersInfos
 userRouter.delete("/delete-user/:id", authMiddleware, adminMiddleware, userController.deleteUser)
 userRouter.put("/edit-user/:id", authMiddleware, userController.editUser)
 userRouter.get("/show-all-employeers", authMiddleware, adminMiddleware, userController.showUsers)
-
+userRouter.post("/reset-password", userController.resetPassword);
 module.exports = userRouter
 
 //routers for users

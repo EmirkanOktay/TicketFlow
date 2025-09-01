@@ -34,8 +34,24 @@ export const getUserInfos = createAsyncThunk(
     }
 );
 
+export const resetPassword = createAsyncThunk(
+    "user/resetUserPasswors",
+    async (_, { rejectWithValue }) => {
+        try {
+            const res = await axios.post("http://localhost:5000/api/users/reset-password", { withCredentials: true });
+            if (res.status === 200) return res.data.message;
+            return rejectWithValue("Reset password failed");
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+
+)
+
 const initialState = {
-    user: null,
+    user: localStorage.getItem("user")
+        ? JSON.parse(localStorage.getItem("user"))
+        : null,
     loading: false,
     error: null,
 };

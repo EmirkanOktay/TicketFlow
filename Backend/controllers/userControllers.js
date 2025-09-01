@@ -183,4 +183,15 @@ const showUsersInfos = async (req, res, next) => {
     }
 }
 
-module.exports = { register, login, deleteUser, editUser, showUsers, logout, showUsersInfos };
+const resetPassword = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        const user = await User.find({ email });
+        if (!user) return res.status(404).json({ message: "User not found" });
+        res.status(200).json({ message: "Reset link sent to your email." });
+    } catch (error) {
+
+    }
+}
+
+module.exports = { register, login, deleteUser, editUser, showUsers, logout, showUsersInfos, resetPassword };
