@@ -6,13 +6,16 @@ const ticketRouter = require("../Backend/router/ticketRouter");
 const session = require("express-session");
 const passport = require("passport");
 const cookie = require("cookie-parser");
-
+const cors = require("cors");
 const app = express();
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 app.use(cookie());
-
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+}))
 app.use(session({
     secret: process.env.SESSION_SECRET,
     saveUninitialized: false,

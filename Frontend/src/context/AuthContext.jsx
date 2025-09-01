@@ -17,13 +17,24 @@ export const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-        setLoading(false);
+        const checkToken = () => {
+            const storedUser = localStorage.getItem("user");
+            if (storedUser) {
+                const userData = JSON.parse(storedUser);
+                const tokenExp = userData.tokenExp;
+                if (Date.now() >= tokenExp * 1000) {
+                    logout();
+                    window.location.href = "/auth/login";
+                } else {
+                    setUser(userData);
+                }
+            }
+            setLoading(false);
+        };
 
+        checkToken();
     }, []);
+
 
     return (<AuthContext.Provider value={{ user, login, logout, loading }}>{children}</AuthContext.Provider>)
 };

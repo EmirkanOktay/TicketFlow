@@ -13,18 +13,38 @@ import ChangePassword from '../pages/auth/changePassword'
 import PrivateRoute from '../routes/PrivateRouter'
 import AuhtLayout from '../layouts/AuthLayout'
 import DashboardLayout from '../layouts/DashboardLayout'
-
+import PublicRoute from './PublicRoute'
 const AppRouter = () => {
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<Home />} />
             //index page
-
                 <Route path="/auth" element={<AuhtLayout />}>
-                    <Route path="login" element={<Login />} />
-                    <Route path="register" element={<Register />} />
-                    <Route path="reset-password" element={<ChangePassword />} />
+                    <Route
+                        path="login"
+                        element={
+                            <PublicRoute>
+                                <Login />
+                            </PublicRoute>
+                        }
+                    />
+                    <Route
+                        path="register"
+                        element={
+                            <PrivateRoute>
+                                <Register />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="reset-password"
+                        element={
+                            <PublicRoute>
+                                <ChangePassword />
+                            </PublicRoute>
+                        }
+                    />
                 </Route>
 
           //auth pages

@@ -1,8 +1,34 @@
 import { Box, Paper, TextField, Typography, Button } from "@mui/material";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import { Link } from "react-router-dom";
-
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../api/UserRedux";
 const Login = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const submitHandler = async (e) => {
+        e.preventDefault();
+        try {
+            const resultAction = await dispatch(loginUser({ email, password }));
+            if (loginUser.fulfilled.match(resultAction)) {
+                toast.success("Login Successful");
+                navigate("/dashboard");
+            } else {
+                toast.error(resultAction.payload || "Login Failed");
+            }
+        } catch (err) {
+            toast.error("Login Failed");
+        }
+    };
+
+
     return (
         <Box
             sx={{
@@ -53,6 +79,8 @@ const Login = () => {
                         label="Email"
                         type="email"
                         margin="normal"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         InputLabelProps={{ style: { color: "#cbd5e1" } }}
                         sx={{
                             input: { color: "#f1f5f9" },
@@ -71,6 +99,8 @@ const Login = () => {
                         label="Password"
                         type="password"
                         margin="normal"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         InputLabelProps={{ style: { color: "#cbd5e1" } }}
                         sx={{
                             input: { color: "#f1f5f9" },
@@ -85,6 +115,7 @@ const Login = () => {
                     />
 
                     <Button
+                        onClick={submitHandler}
                         fullWidth
                         variant="contained"
                         sx={{

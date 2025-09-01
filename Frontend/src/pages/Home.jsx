@@ -1,9 +1,8 @@
-import Navbar from '../components/Navbar'
-
+import Login from "./auth/Login";
 function Home() {
     return (
         <div>
-            <Navbar />
+            <Login />
         </div>
     )
 }

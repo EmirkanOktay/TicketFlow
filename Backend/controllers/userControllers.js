@@ -169,27 +169,18 @@ const showUsers = async (req, res, next) => {
         res.status(400).json({ message: "error for show users" })
     }
 }
-const showUsersByRole = async (req, res, next) => {
+
+const showUsersInfos = async (req, res, next) => {
     try {
-        const userRole = req.user.role;
-        const role = req.query.role;
-        let filter = {};
+        const userId = req.user.id;
+        const user = await User.findById(userId).select("-password");
+        if (!user) return res.status(404).json({ message: "User not found" });
+        res.status(200).json({ user });
 
-        if (role) filter.role = role;
-
-        if (userRole !== "Admin" && userRole !== "IT") {
-            filter._id = req.user.id;
-        }
-
-        const users = await User.find(filter).select("name surname email role ticketCloseCount ticketCreatedCount");
-
-        res.status(200).json({ users });
     } catch (error) {
-        console.error("Show users by role error:", error);
+        console.error("Show users infos error:", error);
         res.status(500).json({ message: "Server error" });
     }
-};
+}
 
-
-
-module.exports = { register, login, deleteUser, editUser, showUsers, showUsersByRole, logout };
+module.exports = { register, login, deleteUser, editUser, showUsers, logout, showUsersInfos };

@@ -14,13 +14,21 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
+import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+    const navigate = useNavigate();
     const { user, logout } = useAuth();
     const [anchorEl, setAnchorEl] = useState(null);
-
     const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
     const handleMenuClose = () => setAnchorEl(null);
+
+    const logoutHandler = () => {
+        logout();
+        toast.success("Logout Successful");
+        navigate("/auth/login");
+    }
 
     return (
         <AppBar
@@ -66,7 +74,7 @@ const Navbar = () => {
                     <>
                         <IconButton onClick={handleMenuOpen} sx={{ ml: 2 }}>
                             <Avatar sx={{ bgcolor: "#f97316" }}>
-                                {user.username?.[0]?.toUpperCase() || "U"}
+                                {user.username?.[0]?.toUpperCase() || ""}
                             </Avatar>
                         </IconButton>
                         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
@@ -75,7 +83,7 @@ const Navbar = () => {
                             </MenuItem>
                             <MenuItem
                                 onClick={() => {
-                                    logout();
+                                    logoutHandler();
                                     handleMenuClose();
                                 }}
                             >
@@ -101,14 +109,14 @@ const Navbar = () => {
                             <MenuIcon />
                         </IconButton>
                         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                            <MenuItem component={Link} to="/ticket/create" onClick={handleMenuClose}>
-                                New Ticket
+                            <MenuItem component={Link} to="/profile/edit" onClick={handleMenuClose}>
+                                My Profile
                             </MenuItem>
                             <MenuItem component={Link} to="/ticket" onClick={handleMenuClose}>
                                 My Tickets
                             </MenuItem>
-                            <MenuItem component={Link} to="/dashboard" onClick={handleMenuClose}>
-                                Dashboard
+                            <MenuItem component={Link} onClick={logoutHandler}>
+                                Logout
                             </MenuItem>
                         </Menu>
                     </Box>
