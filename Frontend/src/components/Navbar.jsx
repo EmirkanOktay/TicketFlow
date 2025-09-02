@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getUserInfos } from "../api/UserRedux";
 const Navbar = () => {
     const navigate = useNavigate();

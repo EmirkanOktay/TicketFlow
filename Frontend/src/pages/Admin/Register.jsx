@@ -77,7 +77,6 @@ const Register = () => {
                         validationSchema={registerSchema}
                         onSubmit={async (values, { setSubmitting, resetForm }) => {
                             try {
-                                console.log("Submitting values:", values);
                                 const result = await dispatch(registerUser(values));
                                 if (registerUser.fulfilled.match(result)) {
                                     toast.success("Registration successful");
@@ -200,10 +199,26 @@ const Register = () => {
 
                                 <FormControl
                                     fullWidth
-                                    sx={{ mb: 3 }}
+                                    sx={{
+                                        mb: 3,
+                                        "& .MuiInputLabel-root": { color: "#cbd5e1" },
+                                        "& .MuiOutlinedInput-root": {
+                                            color: "#f1f5f9",
+                                            borderRadius: 3,
+                                            "& fieldset": { borderColor: "#475569" },
+                                            "&:hover fieldset": { borderColor: "#f97316" },
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: "#f97316",
+                                                boxShadow: "0 0 8px rgba(249,115,22,0.6)",
+                                            },
+                                        },
+                                        "& .Mui-focused .MuiInputLabel-root": {
+                                            color: "#f97316",
+                                        },
+                                    }}
                                     error={touched.role && Boolean(errors.role)}
                                 >
-                                    <InputLabel sx={{ color: "#cbd5e1" }}>Role</InputLabel>
+                                    <InputLabel>Role</InputLabel>
                                     <Select
                                         name="role"
                                         value={values.role}
@@ -214,11 +229,12 @@ const Register = () => {
                                         <MenuItem value="Admin">Admin</MenuItem>
                                     </Select>
                                     {touched.role && errors.role && (
-                                        <Typography sx={{ color: "red", fontSize: 12 }}>
+                                        <Typography sx={{ color: "red", fontSize: 12, mt: 0.5, textAlign: "left" }}>
                                             {errors.role}
                                         </Typography>
                                     )}
                                 </FormControl>
+
 
                                 <Button
                                     fullWidth

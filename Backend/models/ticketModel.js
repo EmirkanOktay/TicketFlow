@@ -5,9 +5,9 @@ const schema = mongoose.Schema;
 const ticketSchema = new schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
-    status: { type: String, enum: ['open', 'in-progress', 'closed'], default: 'open' },
-    priority: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' },
-    category: { type: String, enum: ['hardware', 'software', 'network', 'other'], default: 'other' },
+    status: { type: String, enum: ['Open', 'In-progress', 'Closed'], default: 'Open' },
+    priority: { type: String, enum: ['Low', 'Medium', 'High'], default: 'Medium' },
+    category: { type: String, enum: ['Hardware', 'Software', 'Network', 'Other'], default: 'Other' },
     attachments: [
         {
             fileName: String,

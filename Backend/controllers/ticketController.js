@@ -39,17 +39,17 @@ const createTicket = async (req, res, next) => {
         res.status(201).json(populatedTicket);
         console.log("ticket created!");
 
-        await sendMail({
-            to: user.email,
-            subject: "Your Ticket Has Been Created!",
-            html: `
-                Hello ${user.name},<br><br>
-                Your ticket "${ticket.title}" has been created.<br>
-                Our IT team will check your problem and contact you.<br><br>
-                Have a great day!<br>
-                This mail was sent automatically.
-            `
-        });
+        // await sendMail({
+        //     to: user.email,
+        //     subject: "Your Ticket Has Been Created!",
+        //     html: `
+        //         Hello ${user.name},<br><br>
+        //         Your ticket "${ticket.title}" has been created.<br>
+        //         Our IT team will check your problem and contact you.<br><br>
+        //         Have a great day!<br>
+        //         This mail was sent automatically.
+        //     `
+        // });
 
     } catch (error) {
         console.log("create ticket error  " + error);
