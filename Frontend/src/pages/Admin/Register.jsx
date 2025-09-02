@@ -1,12 +1,15 @@
 import { Box, Button, Paper, TextField, Typography, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../api/UserRedux";
 import { toast } from "react-toastify";
 import { registerSchema } from "../../validations/userSchema";
 import { Formik, Form } from "formik";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -20,7 +23,11 @@ const Register = () => {
             navigate("/dashboard");
         }
     }, [userRole, navigate]);
+    const [showPassword, setShowPassword] = useState(false);
 
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    }
     return (
         <div>
             <Box
@@ -175,13 +182,20 @@ const Register = () => {
                                     fullWidth
                                     label="Password"
                                     name="password"
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     margin="normal"
                                     value={values.password}
                                     onChange={handleChange}
                                     error={touched.password && Boolean(errors.password)}
                                     helperText={touched.password && errors.password}
                                     InputLabelProps={{ style: { color: "#cbd5e1" } }}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end" sx={{ cursor: 'pointer', color: "#f97316", }} onClick={handleClickShowPassword}>
+                                                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                     sx={{
                                         input: { color: "#f1f5f9" },
                                         mb: 3,

@@ -136,9 +136,10 @@ const deleteUser = async (req, res, next) => {
 
 const editUser = async (req, res, next) => {
     try {
-        const { name, surname, password, role, id } = req.body;
+        const { id } = req.params;
+        const { name, surname, email, password, role } = req.body;
 
-        const user = await User.findOne({ id });
+        const user = await User.findById(id);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -149,6 +150,7 @@ const editUser = async (req, res, next) => {
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(password, salt);
         }
+        if (email) user.email = email;
         if (role) user.role = role;
 
         await user.save();

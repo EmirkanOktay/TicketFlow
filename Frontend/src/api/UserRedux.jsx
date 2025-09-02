@@ -34,6 +34,20 @@ export const getUserInfos = createAsyncThunk(
     }
 );
 
+export const editUser = createAsyncThunk(
+    "user/editUser",
+    async ({ id, userData }, { rejectWithValue }) => {
+        try {
+            const res = await axios.put(`http://localhost:5000/api/users/edit-user/${id}`, userData, { withCredentials: true })
+            if (res.status == 200) return res.data.user;
+            return rejectWithValue("Error")
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+
+        }
+    }
+)
+
 export const resetPassword = createAsyncThunk(
     "user/resetUserPasswors",
     async (_, { rejectWithValue }) => {

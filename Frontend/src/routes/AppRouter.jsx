@@ -26,7 +26,7 @@ const AppRouter = () => {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Login />} />
             //index page
                 <Route path="/auth" element={<AuhtLayout />}>
                     <Route
