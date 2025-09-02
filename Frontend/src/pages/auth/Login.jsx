@@ -10,8 +10,6 @@ import useAuth from "../../hooks/useAuth";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import InputAdornment from '@mui/material/InputAdornment';
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { loginSchema } from "../../validations/userSchema"
 
 const Login = () => {
     const dispatch = useDispatch();

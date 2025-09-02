@@ -47,6 +47,29 @@ export const resetPassword = createAsyncThunk(
     }
 
 )
+export const registerUser = createAsyncThunk(
+    "user/registerUser",
+    async (userData, { rejectWithValue }) => {
+        try {
+            const res = await axios.post(
+                "http://localhost:5000/api/users/register",
+                {
+                    name: userData.name,
+                    surname: userData.surname,
+                    email: userData.email,
+                    password: userData.password,
+                    role: userData.role,
+                },
+                { withCredentials: true }
+            );
+
+            if (res.status === 201) return res.data.user;
+            return rejectWithValue("Registration failed");
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
 
 const initialState = {
     user: localStorage.getItem("user")

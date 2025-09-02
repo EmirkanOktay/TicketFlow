@@ -12,18 +12,29 @@ import {
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getUserInfos } from "../api/UserRedux";
 const Navbar = () => {
     const navigate = useNavigate();
     const { user, logout } = useAuth();
     const [anchorEl, setAnchorEl] = useState(null);
     const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
     const handleMenuClose = () => setAnchorEl(null);
+    const [userRole, setUserRole] = useState(null)
+    const disppatch = useDispatch();
 
+    useEffect(() => {
+        disppatch(getUserInfos())
+            .unwrap()
+            .then((data) => setUserRole(data.role))
+            .catch((error) => console.error("Failed to fetch user info:", error));
+    }, [disppatch])
+
+    console.log(userRole)
     const logoutHandler = () => {
         logout();
         toast.success("Logout Successful");
@@ -44,7 +55,7 @@ const Navbar = () => {
                 <Typography
                     variant="h6"
                     component={Link}
-                    to="/"
+                    to="/dashboard"
                     sx={{
                         flexGrow: 1,
                         textDecoration: "none",
@@ -56,7 +67,7 @@ const Navbar = () => {
                     TicketFlow
                 </Typography>
 
-                {user && (
+                {user && userRole === "Employee" && (
                     <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
                         <Button color="inherit" component={Link} to="/ticket/create" sx={{ "&:hover": { color: "#f97316" } }}>
                             New Ticket
@@ -64,12 +75,40 @@ const Navbar = () => {
                         <Button color="inherit" component={Link} to="/ticket" sx={{ "&:hover": { color: "#f97316" } }}>
                             My Tickets
                         </Button>
-                        <Button color="inherit" component={Link} to="/dashboard" sx={{ "&:hover": { color: "#f97316" } }}>
-                            Dashboard
+                        <Button color="inherit" component={Link} to="/ticket/create" sx={{ "&:hover": { color: "#f97316" } }}>
+                            Create Ticket
                         </Button>
                     </Box>
                 )}
 
+
+                {user && userRole === "Admin" && (
+                    <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+                        <Button color="inherit" component={Link} to="/admin/tickets" sx={{ "&:hover": { color: "#f97316" } }}>
+                            Tickets
+                        </Button>
+                        <Button color="inherit" component={Link} to="/admin/users" sx={{ "&:hover": { color: "#f97316" } }}>
+                            Users
+                        </Button>
+                        <Button color="inherit" component={Link} to="/admin/analytics" sx={{ "&:hover": { color: "#f97316" } }}>
+                            Analytics
+                        </Button>
+                    </Box>
+                )}
+
+                {user && userRole === "It" && (
+                    <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+                        <Button color="inherit" component={Link} to="/it/tickets" sx={{ "&:hover": { color: "#f97316" } }}>
+                            Tickets
+                        </Button>
+                        <Button color="inherit" component={Link} to="/it/open-tickets" sx={{ "&:hover": { color: "#f97316" } }}>
+                            Open Tickets
+                        </Button>
+                        <Button color="inherit" component={Link} to="/it/closed-tickets" sx={{ "&:hover": { color: "#f97316" } }}>
+                            Closed Tickets
+                        </Button>
+                    </Box>
+                )}
                 {user ? (
                     <>
                         <IconButton onClick={handleMenuOpen} sx={{ ml: 2 }}>
@@ -103,7 +142,7 @@ const Navbar = () => {
                     </Button>
                 )}
 
-                {user && (
+                {user && userRole == "Employee" && (
                     <Box sx={{ display: { xs: "flex", md: "none" } }}>
                         <IconButton color="inherit" onClick={handleMenuOpen}>
                             <MenuIcon />
@@ -114,6 +153,44 @@ const Navbar = () => {
                             </MenuItem>
                             <MenuItem component={Link} to="/ticket" onClick={handleMenuClose}>
                                 My Tickets
+                            </MenuItem>
+                            <MenuItem component={Link} onClick={logoutHandler}>
+                                Logout
+                            </MenuItem>
+                        </Menu>
+                    </Box>
+                )}
+
+                {user && userRole == "It" && (
+                    <Box sx={{ display: { xs: "flex", md: "none" } }}>
+                        <IconButton color="inherit" onClick={handleMenuOpen}>
+                            <MenuIcon />
+                        </IconButton>
+                        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+                            <MenuItem component={Link} to="/profile/edit" onClick={handleMenuClose}>
+                                My Profile
+                            </MenuItem>
+                            <MenuItem component={Link} to="/it/tickets" onClick={handleMenuClose}>
+                                Tickets
+                            </MenuItem>
+                            <MenuItem component={Link} onClick={logoutHandler}>
+                                Logout
+                            </MenuItem>
+                        </Menu>
+                    </Box>
+                )}
+
+                {user && userRole == "Admin" && (
+                    <Box sx={{ display: { xs: "flex", md: "none" } }}>
+                        <IconButton color="inherit" onClick={handleMenuOpen}>
+                            <MenuIcon />
+                        </IconButton>
+                        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+                            <MenuItem component={Link} to="/profile/edit" onClick={handleMenuClose}>
+                                My Profile
+                            </MenuItem>
+                            <MenuItem component={Link} to="/admin/create-user" onClick={handleMenuClose}>
+                                Create User
                             </MenuItem>
                             <MenuItem component={Link} onClick={logoutHandler}>
                                 Logout

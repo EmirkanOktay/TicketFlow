@@ -1,6 +1,5 @@
-import { Outlet } from "react-router-dom";
-import Navbar from "../components/Navbar";
-function DashboardLayout({ children }) {
+import Navbar from "../components/Navbar"
+function AdminLayout({ children }) {
     return (
         <div className="flex h-screen">
 
@@ -11,7 +10,7 @@ function DashboardLayout({ children }) {
                 </main>
             </div>
         </div>
-    );
+    )
 }
 
-export default DashboardLayout;
+export default AdminLayout

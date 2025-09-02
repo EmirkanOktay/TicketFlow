@@ -49,7 +49,7 @@ const register = async (req, res, next) => {
 
     } catch (error) {
         console.log("register error " + error)
-        res.status(500).json({ message: "Server error", error: error.message });
+        res.status(500).json({ message: "Server error" });
 
     }
 
