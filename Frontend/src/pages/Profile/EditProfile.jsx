@@ -7,6 +7,7 @@ import useAuth from "../../hooks/useAuth";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import InputAdornment from '@mui/material/InputAdornment';
+import Loading from "../../components/Loading";
 
 function EditProfile() {
     const dispatch = useDispatch();
@@ -98,7 +99,7 @@ function EditProfile() {
                 </Box>
 
                 <Typography variant="h4" sx={{ fontWeight: "bold", mb: 4 }}>
-                    My Profile
+                    Edit Profile
                 </Typography>
 
                 <form onSubmit={handleSubmit}>

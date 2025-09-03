@@ -34,6 +34,37 @@ export const getUserInfos = createAsyncThunk(
     }
 );
 
+export const getAllUsers = createAsyncThunk(
+    "user/getAllUsers",
+    async (_, { rejectWithValue }) => {
+        try {
+            const res = await axios.get("http://localhost:5000/api/users/show-all-employeers", {
+                withCredentials: true,
+            });
+            return res.data.users;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || err.message);
+        }
+    }
+);
+
+export const deleteUser = createAsyncThunk(
+    "user/deleteUser",
+    async (id, { rejectWithValue }) => {
+        try {
+            const res = await axios.delete(
+                `http://localhost:5000/api/users/delete-user/${id}`,
+                { withCredentials: true }
+            );
+            if (res.status === 200) return res.data.user;
+            return rejectWithValue("Error");
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+)
+
+
 export const editUser = createAsyncThunk(
     "user/editUser",
     async ({ id, userData }, { rejectWithValue }) => {

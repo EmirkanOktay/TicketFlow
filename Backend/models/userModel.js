@@ -14,8 +14,8 @@ const UserSchema = new schema({
         maxlength: [128, 'Password must be less than 128 characters long']
     },
     role: { type: String, enum: ['Employee', 'It', 'Admin'], default: 'employee' },
-    ticketCreatedCount: { type: Number },
-    ticketCloseCount: { type: Number }
+    ticketCreatedCount: { type: Number, default: 0 },
+    ticketCloseCount: { type: Number, default: 0 },
 }, { timestamps: true })
 
 module.exports = mongoose.model("User", UserSchema);

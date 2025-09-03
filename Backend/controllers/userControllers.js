@@ -119,6 +119,7 @@ const logout = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
     try {
         const { id } = req.params;
+        console.log("Deleting user id:", id);
 
         if (!id) return res.status(400).json({ message: "id is required" });
 
@@ -165,10 +166,10 @@ const editUser = async (req, res, next) => {
 const showUsers = async (req, res, next) => {
     try {
         const users = await User.find()
-        res.status(400).json({ users });
+        res.status(200).json({ users });
     } catch (error) {
         console.log("error show users " + error)
-        res.status(400).json({ message: "error for show users" })
+        res.status(500).json({ message: "error for show users" })
     }
 }
 

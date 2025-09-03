@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserInfos } from "../api/UserRedux";
 const Navbar = () => {
     const navigate = useNavigate();
@@ -26,6 +26,7 @@ const Navbar = () => {
     const handleMenuClose = () => setAnchorEl(null);
     const [userRole, setUserRole] = useState(null)
     const disppatch = useDispatch();
+    const userFromStore = useSelector((state) => state.user.user);
 
     useEffect(() => {
         disppatch(getUserInfos())
@@ -34,13 +35,12 @@ const Navbar = () => {
             .catch((error) => console.error("Failed to fetch user info:", error));
     }, [disppatch])
 
-    console.log(userRole)
     const logoutHandler = () => {
         logout();
         toast.success("Logout Successful");
         navigate("/auth/login");
     }
-
+    const { name, surname, role } = userFromStore
     return (
         <AppBar
             position="sticky"
@@ -72,12 +72,10 @@ const Navbar = () => {
                         <Button color="inherit" component={Link} to="/ticket/create" sx={{ "&:hover": { color: "#f97316" } }}>
                             New Ticket
                         </Button>
-                        <Button color="inherit" component={Link} to="/ticket" sx={{ "&:hover": { color: "#f97316" } }}>
+                        <Button color="inherit" component={Link} to="/ticket/my-tickets" sx={{ "&:hover": { color: "#f97316" } }}>
                             My Tickets
                         </Button>
-                        <Button color="inherit" component={Link} to="/ticket/create" sx={{ "&:hover": { color: "#f97316" } }}>
-                            Create Ticket
-                        </Button>
+
                     </Box>
                 )}
 
@@ -111,11 +109,22 @@ const Navbar = () => {
                 )}
                 {user ? (
                     <>
-                        <IconButton onClick={handleMenuOpen} sx={{ ml: 2 }}>
-                            <Avatar sx={{ bgcolor: "#f97316" }}>
-                                {user.username?.[0]?.toUpperCase() || ""}
-                            </Avatar>
+                        <IconButton onClick={handleMenuOpen} sx={{ ml: 2, p: 0 }}>
+                            <Box display="flex" alignItems="center" gap={1}>
+                                <Avatar sx={{ bgcolor: "#f97316", width: 36, height: 36, fontSize: 14 }}>
+                                    {name?.[0]}{surname?.[0]}
+                                </Avatar>
+                                <Box textAlign="left">
+                                    <Typography sx={{ color: 'white', fontSize: 14, fontWeight: 500 }}>
+                                        {name} {surname}
+                                    </Typography>
+                                    <Typography sx={{ color: 'rgba(255,255,255,0.7)', fontSize: 12 }}>
+                                        {role}
+                                    </Typography>
+                                </Box>
+                            </Box>
                         </IconButton>
+
                         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
                             <MenuItem component={Link} to="/profile" onClick={handleMenuClose}>
                                 Profile
@@ -148,11 +157,11 @@ const Navbar = () => {
                             <MenuIcon />
                         </IconButton>
                         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                            <MenuItem component={Link} to="/profile/edit" onClick={handleMenuClose}>
+                            <MenuItem component={Link} to="/profile/my-profile" onClick={handleMenuClose}>
                                 My Profile
                             </MenuItem>
-                            <MenuItem component={Link} to="/ticket" onClick={handleMenuClose}>
-                                My Tickets
+                            <MenuItem component={Link} to="support" onClick={handleMenuClose}>
+                                Support
                             </MenuItem>
                             <MenuItem component={Link} onClick={logoutHandler}>
                                 Logout
@@ -167,11 +176,10 @@ const Navbar = () => {
                             <MenuIcon />
                         </IconButton>
                         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                            <MenuItem component={Link} to="/profile/edit" onClick={handleMenuClose}>
-                                My Profile
+                            <MenuItem component={Link} to="/profile/my-profile" onClick={handleMenuClose}>                                My Profile
                             </MenuItem>
-                            <MenuItem component={Link} to="/it/tickets" onClick={handleMenuClose}>
-                                Tickets
+                            <MenuItem component={Link} to="support" onClick={handleMenuClose}>
+                                Support
                             </MenuItem>
                             <MenuItem component={Link} onClick={logoutHandler}>
                                 Logout
@@ -186,8 +194,7 @@ const Navbar = () => {
                             <MenuIcon />
                         </IconButton>
                         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                            <MenuItem component={Link} to="/profile/edit" onClick={handleMenuClose}>
-                                My Profile
+                            <MenuItem component={Link} to="/profile/my-profile" onClick={handleMenuClose}>                                My Profile
                             </MenuItem>
                             <MenuItem component={Link} to="/admin/create-user" onClick={handleMenuClose}>
                                 Create User

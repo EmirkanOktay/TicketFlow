@@ -1,11 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "../pages/Dashboard/Index"
 import Ticket from '../pages/Dashboard/Tickets'
-import Profile from '../pages/Profile/Index'
+import Profile from '../pages/Profile/MyProfile'
 import EditProfile from '../pages/Profile/EditProfile'
 import CreateTicket from '../pages/Ticket/CreatTicket'
 import TicketDetail from '../pages/Ticket/TicketDetail'
-import Home from '../pages/Home'
 import NotFound from '../pages/notFound'
 import Login from '../pages/auth/Login'
 import Register from '../pages/Admin/Register'
@@ -22,6 +21,10 @@ import ItTickets from "../pages/ITPages/ItTickets";
 import ITLayout from "../layouts/ITLayout"
 import OpenTickets from "../pages/ITPages/OpenTickets"
 import ClosedTickets from "../pages/ITPages/ClosedTickets"
+import Support from "../pages/Dashboard/Support";
+import MyTickets from '../pages/Ticket/MyTickets'
+import MyProfile from "../pages/Profile/MyProfile";
+
 const AppRouter = () => {
     return (
         <Router>
@@ -59,6 +62,14 @@ const AppRouter = () => {
                         </PrivateRoute>
                     }
                 />
+
+                <Route path="/dashboard/support" element={
+                    <PrivateRoute>
+                        <DashboardLayout>
+                            <Support />
+                        </DashboardLayout>
+                    </PrivateRoute>
+                } />
             //dashboard page
 
                 <Route
@@ -85,11 +96,22 @@ const AppRouter = () => {
                     }
                 />
 
+                <Route
+                    path="/profile/my-profile"
+                    element={
+                        <PrivateRoute>
+                            <DashboardLayout>
+                                <MyProfile />
+                            </DashboardLayout>
+                        </PrivateRoute>
+                    }
+                />
+
             //profile page
 
 
                 <Route
-                    path="/profile/edit"
+                    path="/profile/edit-profile"
                     element={
                         <PrivateRoute>
                             <DashboardLayout>
@@ -126,8 +148,18 @@ const AppRouter = () => {
                         </PrivateRoute>
                     }
                 />
+                <Route
+                    path="/ticket/my-tickets"
+                    element={
+                        <PrivateRoute>
+                            <DashboardLayout>
+                                <MyTickets />
+                            </DashboardLayout>
+                        </PrivateRoute>
+                    }
+                />
 
-            //ticket detail page
+            //ticket  pages
 
                 <Route path="/admin/users"
                     element={
@@ -165,6 +197,17 @@ const AppRouter = () => {
                         </PrivateRoute>
                     }
                 />
+                {/* <Route path="admin/users/profile/edit-profile/:id"
+                    element={
+                        <PrivateRoute>
+                            <AdminLayout>
+                                <  AdminUserEdit />
+                            </AdminLayout>
+                        </PrivateRoute>
+                    }
+                /> */}
+
+
                 //admin pages
 
 
@@ -202,7 +245,6 @@ const AppRouter = () => {
             //not found page
 
             </Routes>
-
         </Router>
     )
 }
