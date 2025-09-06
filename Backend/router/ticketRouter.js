@@ -23,8 +23,12 @@ ticketRouter.get("/show-tickets/:id", authMiddleware, ticketController.getTicket
 ticketRouter.put("/edit-ticket/:id", authMiddleware, uploadAttachments.array("attachments", 10), ticketController.uptadeTicket);
 ticketRouter.put("/close-ticket/:id", authMiddleware, ticketController.closeTicket)
 ticketRouter.delete("/delete-ticket/:id", authMiddleware, ticketController.deleteTicket);
-ticketRouter.get("/show-tickets-status", authMiddleware, ticketController.showTicketsByStatus);
-
+ticketRouter.post("/api/tickets/upload", uploadAttachments.single("file"), (req, res) => {
+    res.json({
+        fileName: req.file.originalname,
+        filePath: `/uploads/${req.file.filename}`
+    });
+});
 
 module.exports = ticketRouter
 

@@ -9,7 +9,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 function AdminUserEdit() {
-    const { id } = useParams(); // URL'den seçilen kullanıcı id'si
+    const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -25,14 +25,12 @@ function AdminUserEdit() {
     const [loading, setLoading] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
 
-    // Admin kontrolü
     useEffect(() => {
         if (!user || user.role !== "Admin") {
-            navigate("/");
+            navigate("/dashboard");
         }
     }, [user, navigate]);
 
-    // Seçilen kullanıcıyı fetch et
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -75,7 +73,11 @@ function AdminUserEdit() {
         }
     };
 
+    if (user.role != "Admin") {
+        navigate("/")
+    }
     if (loading) return <Typography sx={{ textAlign: "center", mt: 10 }}>Loading...</Typography>;
+
 
     return (
         <Box

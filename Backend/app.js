@@ -8,6 +8,7 @@ const passport = require("passport");
 const cookie = require("cookie-parser");
 const cors = require("cors");
 const app = express();
+const path = require("path");
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
@@ -38,6 +39,8 @@ app.use((err, req, res, next) => {
 
 app.use("/api/users", userRouter)
 app.use("/api/tickets", ticketRouter)
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 //routers
 
 

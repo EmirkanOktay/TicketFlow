@@ -25,6 +25,7 @@ import Support from "../pages/Dashboard/Support";
 import MyTickets from '../pages/Ticket/MyTickets'
 import MyProfile from "../pages/Profile/MyProfile";
 import AdminUserEdit from '../pages/Admin/AdminUserEdit'
+import AdminTicketEdit from "../pages/Admin/AdminTicketEdit";
 
 const AppRouter = () => {
     return (
@@ -208,6 +209,15 @@ const AppRouter = () => {
                     }
                 />
 
+                <Route path="admin/edit-ticket/:id"
+                    element={
+                        <PrivateRoute>
+                            <AdminLayout>
+                                <  AdminTicketEdit />
+                            </AdminLayout>
+                        </PrivateRoute>
+                    }
+                />
 
                 //admin pages
 

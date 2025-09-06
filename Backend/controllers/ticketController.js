@@ -61,16 +61,16 @@ const getTickets = async (req, res, next) => {
     try {
         let tickets;
 
-        if (req.user.role = "Admin") {
+        if (req.user.role == "Admin") {
             tickets = await Ticket.find().populate("createdBy", "name surname email").populate("closedBy", "name surname email role");
         }
-        else if (req.user.role = "It") {
+        else if (req.user.role == "It") {
             tickets = await Ticket.find().populate("createdBy", "name surname email").populate("closedBy", "name surname email role");
         }
         else {
             tickets = await Ticket.find({ createdBy: req.user.id }).populate("createdBy", "name surname email").populate("closedBy", "name surname email role");
         }
-        res.status(200).json({ tickets });
+        res.status(200).json(tickets);
 
     } catch (error) {
         console.log("error while getting tickets " + error);
@@ -167,15 +167,16 @@ const closeTicket = async (req, res, next) => {
             user.ticketCloseCount = (user.ticketCloseCount || 0) + 1;
             await user.save();
         }
-        ticket.status = "closed";
+        ticket.status = "Closed";
         ticket.closedBy = req.user.id;
-        ticket.closedDate = new Date();
 
-
-        if (!req.body.result) {
+        ticket.closedDate = new Date().toLocaleDateString();
+        if (!req.body || !req.body.result) {
             return res.status(400).json({ message: "ticket needs result for close" });
         }
+
         ticket.result = req.body.result;
+
 
         const totalSeconds = Math.floor((new Date() - new Date(ticket.createdAt)) / 1000);
         const hours = Math.floor(totalSeconds / 3600);
@@ -189,19 +190,19 @@ const closeTicket = async (req, res, next) => {
             .populate("closedBy", "name surname email role");
 
 
-        await sendMail({
-            to: ticket.createdBy.email,
-            subject: "Your Ticket Has Been Closed!",
-            html: `
-                Hello ${ticket.createdBy.name},<br><br>
-                Your ticket "${ticket.title}" has been closed.<br>
-                Result: ${ticket.result}<br>
-                Closed by: ${req.user.name} (${req.user.role})<br>
-                Close duration: ${ticket.closeDuration}<br><br>
-                Have a great day!<br>
-                This mail was sent automatically.
-            `
-        });
+        // await sendMail({
+        //     to: ticket.createdBy.email,
+        //     subject: "Your Ticket Has Been Closed!",
+        //     html: `
+        //         Hello ${ticket.createdBy.name},<br><br>
+        //         Your ticket "${ticket.title}" has been closed.<br>
+        //         Result: ${ticket.result}<br>
+        //         Closed by: ${req.user.name} (${req.user.role})<br>
+        //         Close duration: ${ticket.closeDuration}<br><br>
+        //         Have a great day!<br>
+        //         This mail was sent automatically.
+        //     `
+        // });
 
 
         res.status(200).json({ message: "Ticket closed", populatedTicket });
@@ -212,29 +213,7 @@ const closeTicket = async (req, res, next) => {
     }
 };
 
-const showTicketsByStatus = async (req, res, next) => {
-    try {
-        const userRole = req.user.role;
-        const userId = req.user.id;
-        const status = req.query.status;
 
-        let filter = {};
-        if (status) filter.status = status;
-
-        if (userRole !== "Admin" && userRole !== "IT") {
-            filter.createdBy = userId;
-        }
-
-        const tickets = await Ticket.find(filter)
-            .populate("createdBy", "name surname email")
-            .populate("closedBy", "name surname email role");
-
-        res.status(200).json({ tickets });
-    } catch (error) {
-        console.error("Tickets error:", error);
-        res.status(500).json({ message: "Server error" });
-    }
-};
 const deleteTicket = async (req, res, next) => {
     try {
         const ticket = await Ticket.findById(req.params.id);
@@ -249,16 +228,16 @@ const deleteTicket = async (req, res, next) => {
 
                         fs.unlink(filePath, (err) => {
                             if (err) {
-                                console.error("Dosya silinemedi:", err.message);
+                                console.error("File Error:", err.message);
                             } else {
-                                console.log("Dosya silindi:", file.fileName);
+                                console.log("File deleted:", file.fileName);
                             }
                         });
                     }
                 }
 
                 await ticket.deleteOne();
-                return res.status(200).json({ message: "Ticket ve dosyaları silindi" });
+                return res.status(200).json({ message: "Ticket Deleted " });
 
             } else {
                 return res.status(404).json({ message: "Ticket not found" });
@@ -273,4 +252,4 @@ const deleteTicket = async (req, res, next) => {
     }
 }
 
-module.exports = { createTicket, getTickets, getTicketById, uptadeTicket, closeTicket, deleteTicket, showTicketsByStatus }
+module.exports = { createTicket, getTickets, getTicketById, uptadeTicket, closeTicket, deleteTicket }

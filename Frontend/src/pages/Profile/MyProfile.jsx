@@ -86,8 +86,11 @@ function MyProfile() {
                         <strong>Email:</strong> {user.email}
                     </Typography>
 
-                    <Typography variant="body1" sx={{ mb: 3 }}>
+                    <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>Role:</strong> {user.role}
+                    </Typography>
+                    <Typography variant="body1" sx={{ mb: 3 }}>
+                        <strong>Account Create Date:</strong> {user.createdAt.toString().slice(0, 10)}
                     </Typography>
 
                     <Button

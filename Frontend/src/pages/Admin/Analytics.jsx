@@ -1,6 +1,8 @@
 function Analytics() {
     return (
-        <div>Analytics</div>
+        <div>
+            Analytics
+        </div>
     )
 }
 

@@ -44,7 +44,7 @@ function Users() {
     const [createSort, setCreateSort] = useState(false);
     const [emailSort, setEmailSort] = useState(false);
     const [roleSort, setRoleSort] = useState(0);
-
+    const [createDate, setCrateDate] = useState(false)
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -94,10 +94,10 @@ function Users() {
     };
 
     const filteredUsers = users.filter(
-        (u) =>
-            u.name?.toLowerCase().includes(search.toLowerCase()) ||
-            u.surname?.toLowerCase().includes(search.toLowerCase()) ||
-            u.email?.toLowerCase().includes(search.toLowerCase())
+        (user) =>
+            user.name?.toLowerCase().includes(search.toLowerCase()) ||
+            user.surname?.toLowerCase().includes(search.toLowerCase()) ||
+            user.email?.toLowerCase().includes(search.toLowerCase())
     );
 
     const closedTicketSort = () => {
@@ -160,6 +160,24 @@ function Users() {
         setRoleSort(1);
     }
 
+    const sortByCrateDate = () => {
+        setCrateDate(!createDate)
+        if (createDate) {
+            return users.sort((a, b) => {
+                const dateA = a.createdAt ? new Date(a.createdAt) : 0;
+                const dateB = b.createdAt ? new Date(b.createdAt) : 0;
+                return dateA - dateB;
+            })
+        }
+        else {
+            return users.sort((a, b) => {
+                const dateA = a.createdAt ? new Date(a.createdAt) : 0;
+                const dateB = b.createdAt ? new Date(b.createdAt) : 0;
+                return dateB - dateA;
+            })
+        }
+    }
+
     if (loading) return <Loading text="Loading..." />;
 
     return (
@@ -215,8 +233,9 @@ function Users() {
                                     <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => sortByName()}>Users</TableCell>
                                     <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => sortByEmail()}>Email</TableCell>
                                     <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => sortByRole()}>Role</TableCell>
-                                    <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => createdTicketSort()}>Created</TableCell>
-                                    <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => closedTicketSort()}>Closed</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => sortByCrateDate()}>Account Create Date</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => createdTicketSort()}>Created Tickets</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => closedTicketSort()}>Closed Tickets</TableCell>
                                     <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -249,6 +268,7 @@ function Users() {
                                                 size="small"
                                             />
                                         </TableCell>
+                                        <TableCell>{user.createdAt.toString().slice(0, 10)}</TableCell>
                                         <TableCell>{user.ticketCreatedCount}</TableCell>
                                         <TableCell>{user.ticketCloseCount}</TableCell>
                                         <TableCell>

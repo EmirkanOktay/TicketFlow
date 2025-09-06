@@ -18,6 +18,33 @@ export const createTicket = createAsyncThunk(
     }
 );
 
+export const getAllTickets = createAsyncThunk(
+    "ticket/getAllTickets",
+    async (_, { rejectWithValue }) => {
+        try {
+            const res = await axios.get("http://localhost:5000/api/tickets/show-tickets", { withCredentials: true })
+            if (res.status === 200) return res.data
+            return rejectWithValue("Error");
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message)
+        }
+    }
+)
+
+export const deleteTicket = createAsyncThunk(
+    "ticket/deleteTicket",
+    async (id, { rejectWithValue }) => {
+        try {
+            const res = await axios.delete(`http://localhost:5000/api/tickets/delete-ticket/${id}`, { withCredentials: true })
+            if (res.status == 200) return res.data;
+            return rejectWithValue("Error");
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message)
+
+        }
+    }
+)
+
 const initialState = {
     ticket: null,
     loading: false,
