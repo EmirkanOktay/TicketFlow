@@ -32,7 +32,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Loading from "../../components/Loading";
-import GradeIcon from '@mui/icons-material/Grade';
 
 function Users() {
     const [users, setUsers] = useState([]);
@@ -40,6 +39,12 @@ function Users() {
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
+    const [closeSortClosed, setCloseSortClosed] = useState(false);
+    const [nameSort, setNameSort] = useState(false);
+    const [createSort, setCreateSort] = useState(false);
+    const [emailSort, setEmailSort] = useState(false);
+    const [roleSort, setRoleSort] = useState(0);
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -95,6 +100,66 @@ function Users() {
             u.email?.toLowerCase().includes(search.toLowerCase())
     );
 
+    const closedTicketSort = () => {
+        setCloseSortClosed(!closeSortClosed)
+        if (closeSortClosed) {
+            return users.sort((a, b) => b.ticketCloseCount - a.ticketCloseCount);
+
+        }
+        else {
+            return users.sort((a, b) => a.ticketCloseCount - b.ticketCloseCount);
+        }
+    }
+
+    const createdTicketSort = () => {
+        setCreateSort(!createSort)
+        if (createSort) {
+            return users.sort((a, b) => b.ticketCreatedCount - a.ticketCreatedCount);
+        }
+        else {
+            return users.sort((a, b) => a.ticketCreatedCount - b.ticketCreatedCount);
+        }
+    }
+
+    const sortByName = () => {
+        setNameSort(!nameSort)
+        if (nameSort) {
+            return users.sort((a, b) => b.name.localeCompare(a.name));
+        }
+        else {
+            return users.sort((a, b) => a.name.localeCompare(b.name));
+        }
+    }
+
+    const sortByEmail = () => {
+        setEmailSort(!emailSort)
+        if (emailSort) {
+            return users.sort((a, b) => b.email.localeCompare(a.email));
+        }
+        else {
+            return users.sort((a, b) => a.email.localeCompare(b.email));
+        }
+    }
+
+    const sortByRole = () => {
+        setRoleSort(roleSort + 1)
+        if (roleSort == 1) {
+            let sort = users.sort((a, b) => a.role.localeCompare(b.role));
+            return sort;
+        }
+        else {
+            let sort = users.sort((a, b) => b.role.localeCompare(a.role));
+            if (sort == "It") {
+                return sort;
+            }
+
+        }
+    }
+
+    if (roleSort > 2) {
+        setRoleSort(1);
+    }
+
     if (loading) return <Loading text="Loading..." />;
 
     return (
@@ -147,11 +212,11 @@ function Users() {
                         <Table>
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: "#f3f4f6" }}>
-                                    <TableCell sx={{ fontWeight: "bold" }}>Users</TableCell>
-                                    <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
-                                    <TableCell sx={{ fontWeight: "bold" }}>Role</TableCell>
-                                    <TableCell sx={{ fontWeight: "bold" }}>Created</TableCell>
-                                    <TableCell sx={{ fontWeight: "bold" }}>Closed</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => sortByName()}>Users</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => sortByEmail()}>Email</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => sortByRole()}>Role</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => createdTicketSort()}>Created</TableCell>
+                                    <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => closedTicketSort()}>Closed</TableCell>
                                     <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -195,9 +260,6 @@ function Users() {
                                                 onClick={() => handleOpenDialog(user._id)}
                                             >
                                                 <DeleteIcon />
-                                            </IconButton>
-                                            <IconButton sx={{ color: ' orange' }}>
-                                                <GradeIcon />
                                             </IconButton>
                                         </TableCell>
                                     </TableRow>

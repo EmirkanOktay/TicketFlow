@@ -24,6 +24,7 @@ import ClosedTickets from "../pages/ITPages/ClosedTickets"
 import Support from "../pages/Dashboard/Support";
 import MyTickets from '../pages/Ticket/MyTickets'
 import MyProfile from "../pages/Profile/MyProfile";
+import AdminUserEdit from '../pages/Admin/AdminUserEdit'
 
 const AppRouter = () => {
     return (
@@ -197,7 +198,7 @@ const AppRouter = () => {
                         </PrivateRoute>
                     }
                 />
-                {/* <Route path="admin/users/profile/edit-profile/:id"
+                <Route path="admin/edit-user/:id"
                     element={
                         <PrivateRoute>
                             <AdminLayout>
@@ -205,7 +206,7 @@ const AppRouter = () => {
                             </AdminLayout>
                         </PrivateRoute>
                     }
-                /> */}
+                />
 
 
                 //admin pages

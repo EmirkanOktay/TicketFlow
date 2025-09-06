@@ -34,6 +34,19 @@ export const getUserInfos = createAsyncThunk(
     }
 );
 
+export const getUserById = createAsyncThunk(
+    "user/getUserById",
+    async (id, { rejectWithValue }) => {
+        try {
+            const res = await axios.get(`http://localhost:5000/api/users/get-user/${id}`, { withCredentials: true });
+            return res.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || "Failed to fetch user");
+        }
+    }
+);
+
+
 export const getAllUsers = createAsyncThunk(
     "user/getAllUsers",
     async (_, { rejectWithValue }) => {

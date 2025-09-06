@@ -11,6 +11,7 @@ userRouter.delete("/delete-user/:id", authMiddleware, adminMiddleware, userContr
 userRouter.put("/edit-user/:id", authMiddleware, userController.editUser)
 userRouter.get("/show-all-employeers", authMiddleware, adminMiddleware, userController.showUsers)
 userRouter.post("/reset-password", userController.resetPassword);
+userRouter.get("/get-user/:id", authMiddleware, adminMiddleware, userController.getUserById);
 module.exports = userRouter
 
 //routers for users
