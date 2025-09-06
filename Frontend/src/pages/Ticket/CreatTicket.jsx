@@ -1,32 +1,45 @@
 import { Box, Paper, TextField, Typography, Button, MenuItem } from "@mui/material";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { createTicketSchema } from "../../validations/TicketSchema";
 import { Formik, Form } from "formik";
 import { toast } from "react-toastify";
-import { createTicket } from "../../api/TicketRedux";
+import { getTicketById, editTicket } from "../../api/TicketRedux";
+import useAuth from "../../hooks/useAuth";
 
-const CreateTicket = () => {
-    const [files, setFiles] = useState([]);
-    const userRole = useSelector((state) => state.user?.user?.role);
-    const loading = useSelector((state) => state.user?.loading);
+function AdminTicketEdit() {
+    const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const [ticket, setTicket] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!loading && userRole === "It") {
+        if (!user || user.role !== "Admin") {
             navigate("/dashboard");
         }
-    }, [loading, userRole, navigate]);
+    }, [user, navigate]);
 
+    useEffect(() => {
+        const fetchTicket = async () => {
+            try {
+                const res = await dispatch(getTicketById(id)).unwrap();
+                setTicket(res);
+            } catch (error) {
+                toast.error("Failed to fetch ticket");
+                navigate("/dashboard");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchTicket();
+    }, [dispatch, id, navigate]);
 
-    if (loading || userRole === "It") return null;
-
-    const handleFileChange = (e) => {
-        setFiles(Array.from(e.target.files));
-    };
+    if (loading) return <Typography sx={{ textAlign: "center", mt: 10 }}>Loading...</Typography>;
+    if (!ticket) return null;
 
     return (
         <Box
@@ -69,43 +82,35 @@ const CreateTicket = () => {
                 </Box>
 
                 <Typography variant="h4" sx={{ fontWeight: "bold", mb: 4, textAlign: "center" }}>
-                    Create a New Ticket
+                    Edit Ticket
                 </Typography>
 
                 <Formik
+                    enableReinitialize
                     initialValues={{
-                        title: "",
-                        description: "",
-                        priority: "Medium",
-                        category: "Other",
+                        title: ticket.title || "",
+                        description: ticket.description || "",
+                        priority: ticket.priority || "Medium",
+                        category: ticket.category || "Other",
                     }}
                     validationSchema={createTicketSchema}
-                    onSubmit={async (values, { setSubmitting, resetForm }) => {
+                    onSubmit={async (values, { setSubmitting }) => {
                         try {
-                            const formData = new FormData();
-                            formData.append("title", values.title);
-                            formData.append("description", values.description);
-                            formData.append("priority", values.priority);
-                            formData.append("category", values.category);
-
-                            files.forEach(file => formData.append("attachments", file));
-
-                            const res = await dispatch(createTicket(formData));
+                            const res = await dispatch(editTicket({ id, ticketData: values }));
 
                             if (res.meta.requestStatus === "fulfilled") {
-                                toast.success("Ticket has been created");
-                                resetForm();
-                                setFiles([]);
+                                toast.success("Ticket updated successfully");
                                 navigate("/dashboard");
                             } else {
-                                toast.error(res.payload || "Ticket creation failed");
+                                toast.error(res.payload || "Update failed");
                             }
                         } catch (error) {
-                            toast.error(error.message || "Ticket creation failed");
+                            toast.error(error.message || "Update failed");
                         } finally {
                             setSubmitting(false);
                         }
-                    }}>
+                    }}
+                >
                     {({ values, handleChange, errors, touched, isSubmitting }) => (
                         <Form style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                             <TextField
@@ -149,8 +154,10 @@ const CreateTicket = () => {
                                 InputProps={{ style: { color: "#cbd5e1" } }}
                                 sx={inputStyle}
                             >
-                                {['Low', 'Medium', 'High'].map((p) => (
-                                    <MenuItem key={p} value={p}>{p}</MenuItem>
+                                {["Low", "Medium", "High"].map((p) => (
+                                    <MenuItem key={p} value={p}>
+                                        {p}
+                                    </MenuItem>
                                 ))}
                             </TextField>
 
@@ -167,30 +174,12 @@ const CreateTicket = () => {
                                 InputProps={{ style: { color: "#cbd5e1" } }}
                                 sx={inputStyle}
                             >
-                                {['Hardware', 'Software', 'Network', 'Other'].map((c) => (
-                                    <MenuItem key={c} value={c}>{c}</MenuItem>
+                                {["Hardware", "Software", "Network", "Other"].map((c) => (
+                                    <MenuItem key={c} value={c}>
+                                        {c}
+                                    </MenuItem>
                                 ))}
                             </TextField>
-
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                component="label"
-                                sx={buttonStyle}
-                            >
-                                Upload Attachments
-                                <input type="file" hidden multiple onChange={handleFileChange} />
-                            </Button>
-
-                            {files.length > 0 && (
-                                <Box sx={{ mt: 1, color: "#f97316", display: "flex", flexDirection: "column", gap: 0.5 }}>
-                                    {files.map((file, index) => (
-                                        <Typography key={index} variant="body2">
-                                            Attached: {file.name}
-                                        </Typography>
-                                    ))}
-                                </Box>
-                            )}
 
                             <Button
                                 fullWidth
@@ -199,15 +188,15 @@ const CreateTicket = () => {
                                 sx={buttonStyle}
                                 disabled={isSubmitting}
                             >
-                                {isSubmitting ? "Creating..." : "Create Ticket"}
+                                {isSubmitting ? "Updating..." : "Update Ticket"}
                             </Button>
                         </Form>
                     )}
                 </Formik>
             </Paper>
-        </Box >
+        </Box>
     );
-};
+}
 
 const inputStyle = {
     "& .MuiOutlinedInput-root": {
@@ -233,4 +222,4 @@ const buttonStyle = {
     },
 };
 
-export default CreateTicket;
+export default AdminTicketEdit;

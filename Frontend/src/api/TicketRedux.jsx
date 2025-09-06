@@ -44,6 +44,36 @@ export const deleteTicket = createAsyncThunk(
         }
     }
 )
+export const editTicket = createAsyncThunk(
+    "ticket/editTicket",
+    async ({ id, ticketData }, { rejectWithValue }) => {
+        try {
+            const res = await axios.put(
+                `http://localhost:5000/api/tickets/edit-ticket/${id}`,
+                ticketData,
+                { withCredentials: true }
+            );
+
+            if (res.status === 200) return res.data;
+            return rejectWithValue("Error");
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
+
+
+export const getTicketById = createAsyncThunk(
+    "ticket/getTicketById",
+    async (id, { rejectWithValue }) => {
+        try {
+            const res = await axios.get(`http://localhost:5000/api/tickets/get-ticket/${id}`, { withCredentials: true });
+            return res.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || "Failed to fetch ticket");
+        }
+    }
+);
 
 const initialState = {
     ticket: null,
@@ -58,7 +88,7 @@ const ticketSlice = createSlice({
     reducers: {
         resetTicketState: (state) => {
             state.ticket = null;
-            state.loading = false;
+            state.loading = false; user
             state.error = null;
             state.success = false;
         }
