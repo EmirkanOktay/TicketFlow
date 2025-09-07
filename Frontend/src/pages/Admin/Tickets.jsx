@@ -8,8 +8,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from 'react-router-dom';
+import useLogo from '../../hooks/useLogo';
+import useDarkMode from '../../hooks/useDarkMode'
 
 function Tickets() {
+    const { openDarkMode } = useDarkMode();
+    const { logoWidth } = useLogo();
 
     const cellStyle = {
         fontWeight: "bold",
@@ -237,8 +241,20 @@ function Tickets() {
     if (loading) return <Loading text="Loading..." />;
 
     return (
-        <Box sx={{ p: 4, bgcolor: "#f5f7fa", minHeight: "100vh" }}>
-            <Card sx={{ borderRadius: 4, boxShadow: "0 8px 24px rgba(0,0,0,0.08)" }}>
+        <Box sx={{
+            p: 4,
+            bgcolor: openDarkMode ? "#082032" : "#F4F9F9",
+            color: openDarkMode ? "#EEEEEE" : "#555555",
+            minHeight: "100vh",
+            marginLeft: logoWidth
+        }}
+        >
+            <Card sx={{
+                borderRadius: 4,
+                boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+                bgcolor: openDarkMode ? "#082032" : "#F4F9F9",
+                color: openDarkMode ? "#EEEEEE" : "#555555",
+            }}>
                 <Box sx={{ background: "linear-gradient(90deg,#f97316, #fb923c)", p: 3, color: 'white' }}>
                     <Typography fontWeight="bold" variant='h5'>
                         🎫 Ticket Management
@@ -256,7 +272,8 @@ function Tickets() {
                                 minWidth: 300,
                                 "& .MuiOutlinedInput-root": {
                                     borderRadius: 3,
-                                    backgroundColor: "#fff",
+                                    bgcolor: openDarkMode ? "#082032" : "#F4F9F9",
+                                    color: openDarkMode ? "#EEEEEE" : "#555555",
                                     boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                                 },
                             }}
@@ -281,7 +298,7 @@ function Tickets() {
                     >
                         <Table>
                             <TableHead>
-                                <TableRow sx={{ backgroundColor: "#f3f4f6" }}>
+                                <TableRow sx={{ bgcolor: openDarkMode ? "#082032" : "#F4F9F9" }}>
                                     <TableCell sx={{ cellStyle, cursor: 'pointer' }} onClick={() => { sortByTitle() }}>Title</TableCell>
                                     <TableCell sx={{ cellStyle, cursor: 'pointer' }} onClick={() => { sortByDescription() }}>Description</TableCell>
                                     <TableCell sx={{ cellStyle, cursor: 'pointer' }} onClick={() => { sortByStatus() }}>Status</TableCell>

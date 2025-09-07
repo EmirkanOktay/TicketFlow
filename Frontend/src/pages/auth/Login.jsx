@@ -78,10 +78,10 @@ const Login = () => {
                         boxShadow: "0 0 20px rgba(249,115,22,0.6)",
                     }}
                 >
-                    <ConfirmationNumberIcon sx={{ fontSize: 40 }} />
+                    <ConfirmationNumberIcon sx={{ fontSize: 40, color: 'white' }} />
                 </Box>
 
-                <Typography variant="h4" sx={{ fontWeight: "bold", mb: 4 }}>
+                <Typography variant="h4" sx={{ fontWeight: "bold", mb: 4, color: 'white' }}>
                     Welcome Back
                 </Typography>
                 <form>

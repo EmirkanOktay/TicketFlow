@@ -18,6 +18,10 @@ import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserInfos } from "../api/UserRedux";
+import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
+import SunnyIcon from '@mui/icons-material/Sunny';
+import useLogo from "../hooks/useLogo";
+import useDarkMode from '../hooks/useDarkMode'
 const Navbar = () => {
     const navigate = useNavigate();
     const { user, logout } = useAuth();
@@ -25,8 +29,12 @@ const Navbar = () => {
     const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
     const handleMenuClose = () => setAnchorEl(null);
     const [userRole, setUserRole] = useState(null)
+
+    let { logoWidth } = useLogo()
+    const { handleDarkMode, openDarkMode } = useDarkMode()
     const disppatch = useDispatch();
     const userFromStore = useSelector((state) => state.user.user);
+
 
     useEffect(() => {
         disppatch(getUserInfos())
@@ -51,7 +59,7 @@ const Navbar = () => {
             }}
         >
             <Toolbar>
-                <ConfirmationNumberIcon sx={{ mr: 1, color: "#f97316" }} />{" "}
+                <ConfirmationNumberIcon sx={{ mr: 1, ml: logoWidth, color: "#f97316" }} />{" "}
                 <Typography
                     variant="h6"
                     component={Link}
@@ -62,51 +70,18 @@ const Navbar = () => {
                         color: "white",
                         fontWeight: "bold",
                         letterSpacing: 1,
+                        transition: "margin 0.3s ease",
                     }}
                 >
                     TicketFlow
                 </Typography>
 
-                {user && userRole === "Employee" && (
-                    <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
-                        <Button color="inherit" component={Link} to="/ticket/create" sx={{ "&:hover": { color: "#f97316" } }}>
-                            New Ticket
-                        </Button>
-                        <Button color="inherit" component={Link} to="/ticket/my-tickets" sx={{ "&:hover": { color: "#f97316" } }}>
-                            My Tickets
-                        </Button>
+                <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+                    <Button color="inherit" sx={{ "&:hover": { color: "#f97316" } }} onClick={handleDarkMode}>
+                        {openDarkMode ? <SunnyIcon /> : <NightlightRoundIcon />}
 
-                    </Box>
-                )}
-
-
-                {user && userRole === "Admin" && (
-                    <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
-                        <Button color="inherit" component={Link} to="/admin/tickets" sx={{ "&:hover": { color: "#f97316" } }}>
-                            Tickets
-                        </Button>
-                        <Button color="inherit" component={Link} to="/admin/users" sx={{ "&:hover": { color: "#f97316" } }}>
-                            Users
-                        </Button>
-                        <Button color="inherit" component={Link} to="/admin/analytics" sx={{ "&:hover": { color: "#f97316" } }}>
-                            Analytics
-                        </Button>
-                    </Box>
-                )}
-
-                {user && userRole === "It" && (
-                    <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
-                        <Button color="inherit" component={Link} to="/it/tickets" sx={{ "&:hover": { color: "#f97316" } }}>
-                            Tickets
-                        </Button>
-                        <Button color="inherit" component={Link} to="/it/open-tickets" sx={{ "&:hover": { color: "#f97316" } }}>
-                            Open Tickets
-                        </Button>
-                        <Button color="inherit" component={Link} to="/it/closed-tickets" sx={{ "&:hover": { color: "#f97316" } }}>
-                            Closed Tickets
-                        </Button>
-                    </Box>
-                )}
+                    </Button>
+                </Box>
                 {user ? (
                     <>
                         <IconButton onClick={handleMenuOpen} sx={{ ml: 2, p: 0 }}>

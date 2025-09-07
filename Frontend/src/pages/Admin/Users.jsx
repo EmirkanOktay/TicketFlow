@@ -32,8 +32,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Loading from "../../components/Loading";
+import useLogo from "../../hooks/useLogo";
 
 function Users() {
+    const { logoWidth } = useLogo();
+
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
@@ -181,7 +184,7 @@ function Users() {
     if (loading) return <Loading text="Loading..." />;
 
     return (
-        <Box sx={{ p: 4, bgcolor: "#f5f7fa", minHeight: "100vh" }}>
+        <Box sx={{ p: 4, bgcolor: "#f5f7fa", minHeight: "100vh", marginLeft: logoWidth }}>
             <Card sx={{ borderRadius: 4, boxShadow: "0 8px 24px rgba(0,0,0,0.08)" }}>
                 <Box
                     sx={{

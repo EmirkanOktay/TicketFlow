@@ -1,0 +1,23 @@
+.dark {
+    background-color: #082032;
+    color: #EEEEEE;
+}
+
+.light {
+    background-color: #F4F9F9;
+    color: white;
+}
+
+.dark .MuiPaper-root,
+.dark .MuiCard-root,
+.dark .MuiTableCell-root {
+    background-color: #082032 !important;
+    color: #EEEEEE !important;
+}
+
+.light .MuiPaper-root,
+.light .MuiCard-root,
+.light .MuiTableCell-root {
+    background-color: #F4F9F9 !important;
+    color: white !important;
+}
