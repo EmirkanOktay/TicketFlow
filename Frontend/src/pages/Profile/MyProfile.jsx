@@ -75,7 +75,7 @@ function MyProfile() {
                     </Typography>
                     <Typography
                         variant="body2"
-                        sx={{ color: "text.secondary", mb: 2 }}
+                        sx={{ mb: 2 }}
                     >
                         {user.role}
                     </Typography>

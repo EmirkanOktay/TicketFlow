@@ -33,9 +33,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Loading from "../../components/Loading";
 import useLogo from "../../hooks/useLogo";
+import useDarkMode from "../../hooks/useDarkMode";
 
 function Users() {
     const { logoWidth } = useLogo();
+    const { openDarkMode } = useDarkMode();
 
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
@@ -184,8 +186,14 @@ function Users() {
     if (loading) return <Loading text="Loading..." />;
 
     return (
-        <Box sx={{ p: 4, bgcolor: "#f5f7fa", minHeight: "100vh", marginLeft: logoWidth }}>
-            <Card sx={{ borderRadius: 4, boxShadow: "0 8px 24px rgba(0,0,0,0.08)" }}>
+        <Box sx={{
+            p: 4,
+            bgcolor: openDarkMode ? "#082032" : "#F4F9F9",
+            color: openDarkMode ? "#EEEEEE" : "#555555",
+            minHeight: "100vh",
+            marginLeft: logoWidth
+        }}
+        >            <Card sx={{ borderRadius: 4, boxShadow: "0 8px 24px rgba(0,0,0,0.08)" }}>
                 <Box
                     sx={{
                         background: "linear-gradient(90deg, #f97316, #fb923c)",
@@ -232,7 +240,7 @@ function Users() {
                     >
                         <Table>
                             <TableHead>
-                                <TableRow sx={{ backgroundColor: "#f3f4f6" }}>
+                                <TableRow sx={{ bgcolor: openDarkMode ? "#082032" : "#F4F9F9" }}>
                                     <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => sortByName()}>Users</TableCell>
                                     <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => sortByEmail()}>Email</TableCell>
                                     <TableCell sx={{ fontWeight: "bold", cursor: 'pointer' }} onClick={() => sortByRole()}>Role</TableCell>
