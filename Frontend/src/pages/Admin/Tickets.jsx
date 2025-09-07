@@ -310,7 +310,7 @@ function Tickets() {
                                     <TableCell sx={{ cellStyle, cursor: 'pointer' }} onClick={() => { sortByClosed() }}>Closed By</TableCell>
                                     <TableCell sx={{ cellStyle, cursor: 'pointer' }} onClick={() => { sortByCloseDate() }}>Closed Date</TableCell>
                                     <TableCell sx={{ cellStyle, cursor: 'pointer' }} onClick={() => { sortByCloseDuration() }}>Close Duration</TableCell>
-                                    <TableCell sx={{ cellStyle }} >Results</TableCell>
+                                    <TableCell sx={{ cellStyle }} >Result</TableCell>
                                     <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -320,13 +320,11 @@ function Tickets() {
                                     <TableRow key={ticket.id} hover>
                                         <TableCell>
                                             <Box flex="flex" alignItems="center" gap={1.5}>
-                                                <Typography fontWeight={500}>
-                                                    {ticket.title}
-                                                </Typography>
+                                                {`${ticket.title.slice(0, 6)}...`}
                                             </Box>
                                         </TableCell>
                                         <TableCell>
-                                            {ticket.description}
+                                            {`${ticket.description.slice(0, 6)}...`}
                                         </TableCell>
                                         <TableCell>
                                             <Chip label={ticket.status}

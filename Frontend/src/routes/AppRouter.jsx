@@ -26,6 +26,7 @@ import MyTickets from '../pages/Ticket/MyTickets'
 import MyProfile from "../pages/Profile/MyProfile";
 import AdminUserEdit from '../pages/Admin/AdminUserEdit'
 import AdminTicketEdit from "../pages/Admin/AdminTicketEdit";
+import EditMyTicket from "../pages/Ticket/EditMyTicket"
 
 const AppRouter = () => {
     return (
@@ -141,7 +142,7 @@ const AppRouter = () => {
 
 
                 <Route
-                    path="/ticket/:id"
+                    path="/ticket/my-tickets/ticket-details/:id"
                     element={
                         <PrivateRoute>
                             <DashboardLayout>
@@ -160,7 +161,16 @@ const AppRouter = () => {
                         </PrivateRoute>
                     }
                 />
-
+                <Route
+                    path="/ticket/edit-ticket/:id"
+                    element={
+                        <PrivateRoute>
+                            <DashboardLayout>
+                                <EditMyTicket />
+                            </DashboardLayout>
+                        </PrivateRoute>
+                    }
+                />
             //ticket  pages
 
                 <Route path="/admin/users"

@@ -88,7 +88,7 @@ const getTicketById = async (req, res, next) => {
             if (
                 userRole === "Admin" ||
                 (userRole === "It") ||
-                (userRole === "Employee" && ticket.createdBy.toString() === userId)
+                (userRole === "Employee" && ticket.createdBy.id.toString() === userId)
             ) {
                 res.status(200).json(ticket);
             } else {
@@ -109,16 +109,16 @@ const uptadeTicket = async (req, res, next) => {
     try {
         const ticket = await Ticket.findById(req.params.id)
         if (!ticket) {
-            res.status(400).json({ message: "ticket not found" })
+            return res.status(400).json({ message: "ticket not found" })
         }
         const userRole = req.user.role;
-        const userId = req.user.id;
+        const ticketOwnerId = ticket.createdBy?._id ? ticket.createdBy._id.toString() : ticket.createdBy?.toString();
 
         if (
             !(
                 userRole === "Admin" ||
                 userRole === "It" ||
-                (userRole === "Employee" && ticket.createdBy?.toString() === userId)
+                (userRole === "Employee" && ticket.createdBy?._id.toString() === ticketOwnerId)
             )
         ) {
             return res.status(403).json({ message: "Not authorized to update this ticket" });

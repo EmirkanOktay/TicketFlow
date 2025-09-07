@@ -75,6 +75,9 @@ export const getTicketById = createAsyncThunk(
     }
 );
 
+// /show-tickets/:id
+
+
 const initialState = {
     ticket: null,
     loading: false,

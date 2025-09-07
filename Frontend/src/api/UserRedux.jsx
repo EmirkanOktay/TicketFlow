@@ -46,7 +46,6 @@ export const getUserById = createAsyncThunk(
     }
 );
 
-
 export const getAllUsers = createAsyncThunk(
     "user/getAllUsers",
     async (_, { rejectWithValue }) => {
