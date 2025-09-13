@@ -238,6 +238,10 @@ function Tickets() {
     };
 
 
+    const handleDetails = (id) => {
+        navigate(`/admin/tickets/ticket-detail/${id}`)
+    }
+
     if (loading) return <Loading text="Loading..." />;
 
     return (
@@ -379,13 +383,13 @@ function Tickets() {
                                             )}
                                         </TableCell>
                                         <TableCell>
-                                            {ticket.createdBy?.name || "-"} {ticket.createdBy?.surname}
+                                            {ticket.createdBy?.name || "-"} {`${ticket.createdBy?.surname.slice(0, 1)}`}
                                         </TableCell>
                                         <TableCell>
                                             {ticket.createdAt.toString().slice(0, 10) || "-"} {ticket.createdAt.toString().slice(0, 0)}
                                         </TableCell>
                                         <TableCell>
-                                            {ticket.closedBy?.name || "-"} {ticket.closedBy?.surname}
+                                            {`${ticket.closedBy?.name || "-" && ticket.closedBy?.surname.slice(0, 1) || "-"}`}
                                         </TableCell>
                                         <TableCell>
                                             {ticket.closedDate?.toString().slice(0, 10) || "-"}
@@ -394,9 +398,12 @@ function Tickets() {
                                             {ticket.closeDuration || "-"}
                                         </TableCell>
                                         <TableCell>
-                                            {ticket.result || "-"}
+                                            {ticket.result ? `${ticket.result.slice(0, 5)}...` : "-"}
                                         </TableCell>
                                         <TableCell>
+                                            <IconButton color="warning" onClick={() => handleDetails(ticket._id)}>
+                                                <SearchIcon />
+                                            </IconButton>
                                             <IconButton color="primary" onClick={() => handleEdit(ticket._id)}>
                                                 <EditIcon />
                                             </IconButton>
@@ -421,13 +428,28 @@ function Tickets() {
                     {"Are you sure you want to delete this ticket?"}
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        This action cannot be undone. The ticket will be permanently deleted.
+                    <DialogContentText
+                        sx={{
+                            color: openDarkMode ? "#EEEEEE" : "inherit"
+                        }}
+                    >
+                        {"This action cannot be undone. The ticket will be permanently deleted."}
                     </DialogContentText>
+
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDialog}>Cancel</Button>
-                    <Button onClick={confirmDeleteTicket} color="error" autoFocus>
+                    <Button sx={{
+                        bgcolor: "#f97316",
+                        color: "white",
+                        "&:hover": { bgcolor: "#fb923c" },
+                        flex: 1,
+                    }} onClick={handleCloseDialog}>Cancel</Button>
+                    <Button sx={{
+                        bgcolor: "#1e293b",
+                        color: "white",
+                        "&:hover": { bgcolor: "#334155" },
+                        flex: 1,
+                    }} onClick={confirmDeleteTicket} color="error" autoFocus>
                         Delete
                     </Button>
                 </DialogActions>

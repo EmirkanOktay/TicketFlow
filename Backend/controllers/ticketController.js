@@ -88,7 +88,7 @@ const getTicketById = async (req, res, next) => {
             if (
                 userRole === "Admin" ||
                 (userRole === "It") ||
-                (userRole === "Employee" && ticket.createdBy.id.toString() === userId)
+                (userRole === "Employee" && ticket.createdBy._id.toString() === userId)
             ) {
                 res.status(200).json(ticket);
             } else {
@@ -176,14 +176,18 @@ const closeTicket = async (req, res, next) => {
         }
 
         ticket.result = req.body.result;
+        const now = new Date();
+        ticket.closedDate = now;
+        ticket.status = "Closed";
+        ticket.closedBy = req.user.id;
 
-
-        const totalSeconds = Math.floor((new Date() - new Date(ticket.createdAt)) / 1000);
+        const totalSeconds = Math.floor((now - new Date(ticket.createdAt)) / 1000);
         const hours = Math.floor(totalSeconds / 3600);
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
 
-        ticket.closeDuration = `${hours}h ${minutes}m ${seconds}s`
+        ticket.closeDuration = `${hours}h ${minutes}m ${seconds}s`;
+
 
         await ticket.save();
         const populatedTicket = await Ticket.findById(ticket._id)

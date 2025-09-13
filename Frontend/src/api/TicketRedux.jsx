@@ -75,7 +75,24 @@ export const getTicketById = createAsyncThunk(
     }
 );
 
-// /show-tickets/:id
+export const closeTicket = createAsyncThunk(
+    "ticket/closeTicket",
+    async ({ id, result }, { rejectWithValue }) => {
+        try {
+            const res = await axios.put(
+                `http://localhost:5000/api/tickets/close-ticket/${id}`,
+                { result },
+                { withCredentials: true }
+            );
+            return res.data;
+        } catch (err) {
+            return rejectWithValue(
+                err.response?.data?.message || "Failed to close ticket"
+            );
+        }
+    }
+);
+
 
 
 const initialState = {

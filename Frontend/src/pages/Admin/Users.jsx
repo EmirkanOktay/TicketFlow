@@ -83,6 +83,11 @@ function Users() {
         setSelectedUserId(null);
     };
 
+    const handleDetails = (id) => {
+        navigate(`/admin/users/user-profile/${id}`)
+    }
+
+
     const confirmDeleteUser = async () => {
         try {
             const result = await dispatch(deleteUser(selectedUserId)).unwrap();
@@ -283,6 +288,9 @@ function Users() {
                                         <TableCell>{user.ticketCreatedCount}</TableCell>
                                         <TableCell>{user.ticketCloseCount}</TableCell>
                                         <TableCell>
+                                            <IconButton color="warning" onClick={() => handleDetails(user._id)}>
+                                                <SearchIcon />
+                                            </IconButton>
                                             <IconButton onClick={() => handleEdit(user._id)} color="primary">
                                                 <EditIcon />
                                             </IconButton>

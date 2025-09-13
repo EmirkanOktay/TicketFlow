@@ -27,6 +27,8 @@ import MyProfile from "../pages/Profile/MyProfile";
 import AdminUserEdit from '../pages/Admin/AdminUserEdit'
 import AdminTicketEdit from "../pages/Admin/AdminTicketEdit";
 import EditMyTicket from "../pages/Ticket/EditMyTicket"
+import TicketDetailsAdmin from "../pages/Admin/TicketDetailsAdmin";
+import AdminUserProfile from "../pages/Admin/AdminUserProfile";
 
 const AppRouter = () => {
     return (
@@ -151,6 +153,7 @@ const AppRouter = () => {
                         </PrivateRoute>
                     }
                 />
+                //fffff
                 <Route
                     path="/ticket/my-tickets"
                     element={
@@ -182,6 +185,15 @@ const AppRouter = () => {
                         </PrivateRoute>
                     }
                 />
+                <Route path="/admin/users/user-profile/:id"
+                    element={
+                        <PrivateRoute>
+                            <AdminLayout>
+                                <AdminUserProfile />
+                            </AdminLayout>
+                        </PrivateRoute>
+                    }
+                />
                 <Route path="/admin/tickets"
                     element={
                         <PrivateRoute>
@@ -191,6 +203,14 @@ const AppRouter = () => {
                         </PrivateRoute>
                     }
                 />
+                < Route path="/admin/tickets/ticket-detail/:id"
+                    element={
+                        <PrivateRoute>
+                            <AdminLayout>
+                                <TicketDetailsAdmin />
+                            </AdminLayout>
+                        </PrivateRoute>
+                    } />
                 <Route path="/admin/analytics"
                     element={
                         <PrivateRoute>
