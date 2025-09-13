@@ -218,6 +218,48 @@ const closeTicket = async (req, res, next) => {
 };
 
 
+const inProgresss = async (req, res, next) => {
+    try {
+        const ticket = await Ticket.findById(req.params.id);
+
+        if (!ticket) return res.status(404).json({ message: "Ticket not found" });
+
+        if (ticket.status === "Closed") {
+            return res.status(400).json({ message: "Ticket already closed" });
+        }
+
+        const userRole = req.user?.role;
+        const userId = req.user?.id;
+
+        if (!userRole || !userId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        if (
+            !(
+                userRole === "Admin" ||
+                userRole === "It" ||
+                (ticket.createdBy && ticket.createdBy._id.toString() === userId)
+            )
+        ) {
+            return res.status(403).json({ message: "Not authorized to change this ticket" });
+        }
+
+        ticket.status = "In-progress";
+        if (ticket.status == "In-progress") {
+            return res.status(400).json({ message: "Ticket is already in-progress" })
+        }
+        await ticket.save();
+
+        res.status(200).json(ticket);
+    } catch (error) {
+        console.error("Ticket in-progress error:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+
 const deleteTicket = async (req, res, next) => {
     try {
         const ticket = await Ticket.findById(req.params.id);
@@ -256,4 +298,4 @@ const deleteTicket = async (req, res, next) => {
     }
 }
 
-module.exports = { createTicket, getTickets, getTicketById, uptadeTicket, closeTicket, deleteTicket }
+module.exports = { createTicket, getTickets, getTicketById, uptadeTicket, closeTicket, deleteTicket, inProgresss }

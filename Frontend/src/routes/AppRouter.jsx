@@ -29,6 +29,8 @@ import AdminTicketEdit from "../pages/Admin/AdminTicketEdit";
 import EditMyTicket from "../pages/Ticket/EditMyTicket"
 import TicketDetailsAdmin from "../pages/Admin/TicketDetailsAdmin";
 import AdminUserProfile from "../pages/Admin/AdminUserProfile";
+import InprogressTickets from "../pages/ITPages/InprogressTickets"
+import ItTicketDetail from "../pages/ITPages/ItTicketDetail";
 
 const AppRouter = () => {
     return (
@@ -281,6 +283,29 @@ const AppRouter = () => {
                         </PrivateRoute>
                     }
                 />
+
+
+                <Route path="/it/in-progress-tickets"
+                    element={
+                        <PrivateRoute>
+                            <ITLayout>
+                                <InprogressTickets />
+                            </ITLayout>
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route path="/it/tickets/ticket-detail/:id"
+                    element={
+                        <PrivateRoute>
+                            <ITLayout>
+                                <ItTicketDetail />
+                            </ITLayout>
+                        </PrivateRoute>
+                    }
+                />
+
+
 
                 <Route path="*" element={<NotFound />} />
             //not found page

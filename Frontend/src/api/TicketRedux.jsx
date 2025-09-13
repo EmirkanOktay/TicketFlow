@@ -92,6 +92,24 @@ export const closeTicket = createAsyncThunk(
         }
     }
 );
+export const inProgressTicket = createAsyncThunk(
+    "ticket/inProgressTicket",
+    async ({ id }, { rejectWithValue }) => {
+        try {
+            const res = await axios.put(
+                `http://localhost:5000/api/tickets/in-progress-ticket/${id}`,
+                {},
+                { withCredentials: true }
+            );
+            return res.data;
+        } catch (err) {
+            return rejectWithValue(
+                err.response?.data?.message || "Failed to in-progress ticket"
+            );
+        }
+    }
+);
+
 
 
 

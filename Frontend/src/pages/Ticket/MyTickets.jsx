@@ -381,7 +381,7 @@ function MyTickets() {
                                                         </a>
                                                     ))
                                                 ) : (
-                                                    <span>No attachments</span>
+                                                    <span>-</span>
                                                 )}
                                             </TableCell>
                                             <TableCell>

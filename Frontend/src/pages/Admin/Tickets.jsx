@@ -324,11 +324,11 @@ function Tickets() {
                                     <TableRow key={ticket.id} hover>
                                         <TableCell>
                                             <Box flex="flex" alignItems="center" gap={1.5}>
-                                                {`${ticket.title.slice(0, 6)}...`}
+                                                {`${ticket.title.slice(0, 4)}...`}
                                             </Box>
                                         </TableCell>
                                         <TableCell>
-                                            {`${ticket.description.slice(0, 6)}...`}
+                                            {`${ticket.description.slice(0, 4)}...`}
                                         </TableCell>
                                         <TableCell>
                                             <Chip label={ticket.status}
@@ -379,7 +379,7 @@ function Tickets() {
                                                     </a>
                                                 ))
                                             ) : (
-                                                <span>No attachments</span>
+                                                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>-</span>
                                             )}
                                         </TableCell>
                                         <TableCell>
@@ -401,10 +401,10 @@ function Tickets() {
                                             {ticket.result ? `${ticket.result.slice(0, 5)}...` : "-"}
                                         </TableCell>
                                         <TableCell>
-                                            <IconButton color="warning" onClick={() => handleDetails(ticket._id)}>
+                                            <IconButton sx={{ width: "18px" }} color="warning" onClick={() => handleDetails(ticket._id)}>
                                                 <SearchIcon />
                                             </IconButton>
-                                            <IconButton color="primary" onClick={() => handleEdit(ticket._id)}>
+                                            <IconButton sx={{ marginLeft: " 3px" }} color="primary" onClick={() => handleEdit(ticket._id)}>
                                                 <EditIcon />
                                             </IconButton>
                                             <IconButton onClick={() => handleOpenDialog(ticket._id)}

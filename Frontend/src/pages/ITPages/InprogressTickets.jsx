@@ -9,8 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import useLogo from '../../hooks/useLogo';
 import useDarkMode from '../../hooks/useDarkMode'
 
-
-function OpenTickets() {
+function InprogressTickets() {
     const { openDarkMode } = useDarkMode();
     const { logoWidth } = useLogo();
 
@@ -44,7 +43,7 @@ function OpenTickets() {
         try {
             const res = await dispatch(getAllTickets()).unwrap();
             if (res) {
-                const openTickets = res.filter(item => item.status === "Open");
+                const openTickets = res.filter(item => item.status === "In-progress");
                 setTickets(openTickets);
             }
         } catch (error) {
@@ -53,17 +52,16 @@ function OpenTickets() {
             setLoading(false)
         }
     }
-
     useEffect(() => {
         getTickets()
     }, [])
-
 
     const filteredKey = tickets.filter((ticket) =>
         ticket.title?.toLowerCase().includes(search.toLowerCase()) ||
         ticket.description?.toLowerCase().includes(search.toLowerCase()) ||
         ticket.category?.toLowerCase().includes(search.toLowerCase()) ||
-        ticket.createdBy?.name?.toLowerCase().includes(search.toLowerCase())
+        ticket.createdBy?.name?.toLowerCase().includes(search.toLowerCase()) ||
+        ticket.status?.toLowerCase().includes(search.toLowerCase())
     );
 
     const sortByTitle = () => {
@@ -213,7 +211,6 @@ function OpenTickets() {
     }
 
     if (loading) return <Loading text="Loading..." />;
-
     return (
         <div>
             <Box sx={{
@@ -389,4 +386,10 @@ function OpenTickets() {
     )
 }
 
-export default OpenTickets
+export default InprogressTickets
+
+
+
+
+
+

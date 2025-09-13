@@ -19,7 +19,7 @@ import {
 import { toast } from "react-toastify";
 import { closeTicket, getTicketById, inProgressTicket } from "../../api/TicketRedux";
 
-function TicketDetailsAdmin() {
+function ItTicketDetail() {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -84,7 +84,6 @@ function TicketDetailsAdmin() {
             toast.error(error);
         }
     }
-
 
     if (loading)
         return (
@@ -188,44 +187,48 @@ function TicketDetailsAdmin() {
                 </Box>
 
                 <Divider sx={{ mb: 2 }} />
-
                 {ticket.status !== "Closed" && (
                     <Box sx={{ display: "flex", gap: 2 }}>
                         <Button
-                            onClick={() => navigate(`/ticket/edit-ticket/${ticket._id}`)}
+                            onClick={handleOpenDialog}
                             variant="contained"
-                            sx={{ bgcolor: "#f97316", "&:hover": { bgcolor: "#f97316" }, flex: 1 }}
+                            sx={{
+                                flex: 1,
+                                border: "1px solid #f97316",
+                                backgroundColor: "#1e293b",
+                                "&:hover": { backgroundColor: "#334155" },
+                            }}
                         >
-                            Edit Ticket
+                            Close Ticket
                         </Button>
+
                         <Button
                             onClick={() => inProgressTicketFunc(ticket._id)}
                             variant="contained"
                             sx={{
                                 flex: 1,
-                                border: "1px solid #    ",
-                                backgroundColor: "#d87c3aff",
+                                border: "1px solid #1e293b",
+                                backgroundColor: "#f97316",
                                 "&:hover": { backgroundColor: "#f97316" },
                             }}
                         >
                             In-Progress
                         </Button>
-                        <Button
-                            onClick={handleOpenDialog}
-                            variant="contained"
-                            sx={{ flex: 1, border: "1px solid #f97316", backgroundColor: "#1e293b", "&:hover": { backgroundColor: "#334155" } }}
-                        >
-                            Close Ticket
-                        </Button>
+
                         <Button
                             onClick={() => navigate("/ticket/my-tickets")}
                             variant="outlined"
-                            sx={{ flex: 1, color: "#f97316", border: "1px solid #f97316" }}
+                            sx={{
+                                flex: 1,
+                                color: "#f97316",
+                                border: "1px solid #f97316",
+                            }}
                         >
                             Back
                         </Button>
                     </Box>
                 )}
+
             </Card>
 
             <Dialog open={open} onClose={handleCloseDialog} aria-labelledby="alert-dialog-title">
@@ -261,4 +264,13 @@ function TicketDetailsAdmin() {
     );
 }
 
-export default TicketDetailsAdmin;
+export default ItTicketDetail;
+
+
+
+
+
+
+
+
+
