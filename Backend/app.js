@@ -44,7 +44,9 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 //routers
 
 
+
 app.listen(process.env.LOCAL_HOST_PORT, () => {
     console.log("server establiashed")
 })
+
 //server
