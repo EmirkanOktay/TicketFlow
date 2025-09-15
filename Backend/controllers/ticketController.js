@@ -244,11 +244,10 @@ const inProgresss = async (req, res, next) => {
         ) {
             return res.status(403).json({ message: "Not authorized to change this ticket" });
         }
-
-        ticket.status = "In-progress";
         if (ticket.status == "In-progress") {
             return res.status(400).json({ message: "Ticket is already in-progress" })
         }
+        ticket.status = "In-progress";
         await ticket.save();
 
         res.status(200).json(ticket);

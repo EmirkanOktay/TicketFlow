@@ -201,22 +201,24 @@ function ItTicketDetail() {
                         >
                             Close Ticket
                         </Button>
+                        {ticket.status == "Open" && (
+                            <Button
+                                onClick={() => inProgressTicketFunc(ticket._id)}
+                                variant="contained"
+                                sx={{
+                                    flex: 1,
+                                    border: "1px solid #1e293b",
+                                    backgroundColor: "#f97316",
+                                    "&:hover": { backgroundColor: "#f97316" },
+                                }}
+                            >
+                                In-Progress
+                            </Button>
+                        )}
+
 
                         <Button
-                            onClick={() => inProgressTicketFunc(ticket._id)}
-                            variant="contained"
-                            sx={{
-                                flex: 1,
-                                border: "1px solid #1e293b",
-                                backgroundColor: "#f97316",
-                                "&:hover": { backgroundColor: "#f97316" },
-                            }}
-                        >
-                            In-Progress
-                        </Button>
-
-                        <Button
-                            onClick={() => navigate("/ticket/my-tickets")}
+                            onClick={() => navigate("/it/tickets")}
                             variant="outlined"
                             sx={{
                                 flex: 1,

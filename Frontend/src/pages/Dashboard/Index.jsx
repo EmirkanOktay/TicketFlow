@@ -8,8 +8,10 @@ import { useEffect, useState } from "react";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import Loading from '../../components/Loading';
 import useLogo from "../../hooks/useLogo";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+    const navigate = useNavigate();
     const { logoWidth } = useLogo();
     const currentUser = useSelector((state) => state.user.user);
     const currentUserRole = currentUser.role;
@@ -22,6 +24,10 @@ const Dashboard = () => {
     const [mostTicketCreater, setMostTicketCreater] = useState();
     const [mostTicketCloser, setMostTicketCloser] = useState();
     const [avarageCloseDuration, setAvarageCloseDuration] = useState();
+    const [showLastThreeOpenTickets, setShowLastThreeOpenTickets] = useState({});
+    const [showLastThreeInProgressTickets, setShowLastThreeInProgressTickets] = useState({});
+    const [showLastThreeClosedTickets, setShowLastThreeClosedTickets] = useState({});
+
     const [loading, setLoading] = useState(true);
 
     const getTicketsAll = async () => {
@@ -40,7 +46,7 @@ const Dashboard = () => {
             const response = await dispatch(getAllUsers()).unwrap();
             if (response) setUsers(response)
         } catch (error) {
-            console.log(error)
+            console.log("")
         }
         finally {
             setLoading(false)
@@ -66,6 +72,29 @@ const Dashboard = () => {
             acc[ticket.priority] = (acc[ticket.priority] || 0) + 1;
             return acc;
         }, {});
+
+        const closedTicketsFunc = tickets.filter(ticket => ticket.status === "Closed");
+        const sortedClosedTickets = closedTicketsFunc.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        const lastThreeClosedTickets = sortedClosedTickets.slice(0, 3);
+
+
+        const inProgressTickets = tickets.filter(ticket => ticket.status === "In-progress");
+        const sortetInProgressTickets = inProgressTickets.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        const lastThreeInProgressTickets = sortetInProgressTickets.slice(0, 3);
+
+
+
+        const openTickets = tickets.filter(ticket => ticket.status === "Open");
+        const sortedOpenTickets = openTickets.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        const lastThreeOpenTickets = sortedOpenTickets.slice(0, 3);
+
+
 
         const statusCount = tickets.reduce((acc, ticket) => {
             if (!ticket?.status) return acc;
@@ -112,10 +141,14 @@ const Dashboard = () => {
         setCountCategory(categoryCount);
         setCountPriority(priorityCount);
         setTotalTicketPercan(statusPercentage);
+        setShowLastThreeOpenTickets(lastThreeOpenTickets)
+        setShowLastThreeClosedTickets(lastThreeClosedTickets)
+        setShowLastThreeInProgressTickets(lastThreeInProgressTickets)
         setAvarageCloseDuration(averageCloseDuration);
         setMostTicketCreater(mostTicketCreaterUser);
         setMostTicketCloser(mostTicketCloserUser);
     }, [tickets, users]);
+
 
     const pieData = Object.entries(countPriority).map(([priority, value], index) => ({
         id: index,
@@ -128,6 +161,11 @@ const Dashboard = () => {
                     ? "#fbbf24"
                     : "#1e293b",
     }));
+
+    const handleDetails = (id) => {
+        navigate(`/it/tickets/ticket-detail/${id}`)
+    }
+
 
     if (loading) return <Loading text="Loading..." />;
     return (
@@ -264,7 +302,8 @@ const Dashboard = () => {
                                     <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>Most Ticket Creator</Typography>
                                 </Box>
                                 <Box sx={{ mt: 2 }}>
-                                    <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>{mostTicketCreater.ticketCreatedCount} Ticket Created!</Typography>
+                                    <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}
+                                    >{mostTicketCreater?.ticketCreatedCount} Ticket Created!</Typography>
 
                                     <Typography variant="h5" sx={{ fontWeight: "bold" }}>
                                         {mostTicketCreater?.name} {mostTicketCreater?.surname}
@@ -296,7 +335,8 @@ const Dashboard = () => {
                                     <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>Most Ticket Closer</Typography>
                                 </Box>
                                 <Box sx={{ mt: 2 }}>
-                                    <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>{mostTicketCloser.ticketCloseCount} Ticket Closed!</Typography>
+                                    <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                                        {mostTicketCloser?.ticketCloseCount} Ticket Closed!</Typography>
                                     <Typography variant="h5" sx={{ fontWeight: "bold" }}>
                                         {mostTicketCloser?.name} {mostTicketCloser?.surname}
                                     </Typography>
@@ -336,6 +376,130 @@ const Dashboard = () => {
                     </Box>
                 )
             }
+            {currentUser && currentUserRole === "It" && (
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 4,
+                        mt: 4,
+                        alignItems: "center",
+                        paddingBottom: 4,
+                    }}
+                >
+                    {/* Kullanıcı Statistiği */}
+                    <Card
+                        sx={{
+                            borderRadius: 3,
+                            boxShadow: "0 6px 25px rgba(0,0,0,0.2)",
+                            background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+                            color: "#f97316",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "space-between",
+                            p: 3,
+                            transition: "transform 0.3s, box-shadow 0.3s",
+                            width: "85%",
+                            "&:hover": {
+                                transform: "scale(1.05)",
+                                boxShadow: "0 10px 35px rgba(0,0,0,0.3)",
+                            },
+                        }}
+                    >
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                            <Typography variant="h6" sx={{ fontWeight: "bold" }}>✅</Typography>
+                            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>My Statistics</Typography>
+                        </Box>
+                        <Box sx={{ mt: 2 }}>
+                            <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                                {currentUser?.name} {currentUser?.surname}
+                            </Typography>
+                            <Typography variant="body2">{currentUser?.email}</Typography>
+                            <Typography variant="body">{currentUser?.role}</Typography>
+                            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                                {currentUser?.ticketCloseCount} Tickets Closed!
+                            </Typography>
+                        </Box>
+                    </Card>
+
+                    {/* Ticket Kartlarını Oluşturan Fonksiyon */}
+                    {[
+                        { title: "Open Tickets", tickets: showLastThreeOpenTickets, color: "#81C784", hover: "#66BB6A", icon: "🟢", textColor: "#1B5E20", darkBg: "#263238", darkHover: "#66BB6A", darkText: "#C8E6C9" },
+                        { title: "In Progress", tickets: showLastThreeInProgressTickets, color: "#FFB74D", hover: "#FFB74D", icon: "🟠", textColor: "#E65100", darkBg: "#2C2C2C", darkHover: "#FFB74D", darkText: "#FFE0B2" },
+                        { title: "Closed Tickets", tickets: showLastThreeClosedTickets, color: "#EF9A9A", hover: "#EF5350", icon: "🔴", textColor: "#B71C1C", darkBg: "#4A2F2F", darkHover: "#EF5350", darkText: "#FFCDD2" },
+                    ].map((section, i) => (
+                        <Box
+                            key={i}
+                            sx={{
+                                width: "85%",
+                                p: 3,
+                                borderRadius: 3,
+                                bgcolor: section.color,
+                                boxShadow: 4,
+                                position: "relative",
+                                overflow: "hidden",
+                                "&:before": {
+                                    content: '""',
+                                    position: "absolute",
+                                    width: "120%",
+                                    height: "120%",
+                                    bgcolor: section.color,
+                                    top: "-50%",
+                                    left: "-50%",
+                                    transform: "rotate(45deg)",
+                                    opacity: 0.1,
+                                },
+                                [theme => theme.palette.mode === "dark"]: {
+                                    bgcolor: section.darkBg,
+                                    "&:before": { bgcolor: section.darkBg, opacity: 0.1 },
+                                },
+                            }}
+                        >
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    fontWeight: 700,
+                                    mb: 2,
+                                    color: theme => (theme.palette.mode === "dark" ? section.darkText : section.textColor),
+                                }}
+                            >
+                                {section.icon} {section.title}
+                            </Typography>
+
+                            {section.tickets.length > 0 ? (
+                                section.tickets.map((ticket, index) => (
+                                    <Box
+                                        key={index}
+                                        onClick={() => handleDetails(ticket._id)}
+                                        sx={{
+                                            mb: 1.5,
+                                            p: 1.5,
+                                            borderRadius: 2,
+                                            bgcolor: section.darkText,
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                            transition: "0.2s",
+                                            "&:hover": {
+                                                bgcolor: theme => (theme.palette.mode === "dark" ? section.darkHover : section.hover),
+                                                cursor: "pointer",
+                                            },
+                                        }}
+                                    >
+                                        <Typography sx={{ fontWeight: 500, cursor: "pointer" }}>{ticket.title}</Typography>
+                                        <Typography sx={{ fontSize: 12, color: section.textColor, cursor: "pointer" }}>
+                                            {new Date(ticket.createdAt).toLocaleDateString()}
+                                        </Typography>
+                                    </Box>
+                                ))
+                            ) : (
+                                <Typography sx={{ color: section.textColor }}>No {section.title.toLowerCase()}</Typography>
+                            )}
+                        </Box>
+                    ))}
+                </Box>
+            )}
+
         </>
     );
 
