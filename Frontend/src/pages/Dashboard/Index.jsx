@@ -162,8 +162,14 @@ const Dashboard = () => {
                     : "#1e293b",
     }));
 
-    const handleDetails = (id) => {
-        navigate(`/it/tickets/ticket-detail/${id}`)
+    const handleDetails = (id, role) => {
+        if (role == "It") {
+            navigate(`/it/tickets/ticket-detail/${id}`)
+        }
+        else {
+            navigate(`/ticket/my-tickets/ticket-details/${id}`)
+
+        }
     }
 
 
@@ -376,129 +382,127 @@ const Dashboard = () => {
                     </Box>
                 )
             }
-            {currentUser && currentUserRole === "It" && (
-                <Box
+            {currentUser && (currentUserRole === "It" || currentUserRole === "Employee") && (<Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 4,
+                    mt: 4,
+                    alignItems: "center",
+                    paddingBottom: 4,
+                }}
+            >
+                <Card
                     sx={{
+                        borderRadius: 3,
+                        boxShadow: "0 6px 25px rgba(0,0,0,0.2)",
+                        background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+                        color: "#f97316",
                         display: "flex",
                         flexDirection: "column",
-                        gap: 4,
-                        mt: 4,
-                        alignItems: "center",
-                        paddingBottom: 4,
+                        justifyContent: "space-between",
+                        p: 3,
+                        transition: "transform 0.3s, box-shadow 0.3s",
+                        width: "85%",
+                        "&:hover": {
+                            transform: "scale(1.05)",
+                            boxShadow: "0 10px 35px rgba(0,0,0,0.3)",
+                        },
                     }}
                 >
-                    {/* Kullanıcı Statistiği */}
-                    <Card
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                        <Typography variant="h6" sx={{ fontWeight: "bold" }}>✅</Typography>
+                        <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>My Statistics</Typography>
+                    </Box>
+                    <Box sx={{ mt: 2 }}>
+                        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                            {currentUser?.name} {currentUser?.surname}
+                        </Typography>
+                        <Typography variant="body2">{currentUser?.email}</Typography>
+                        <Typography variant="body">{currentUser?.role}</Typography>
+                        <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                            {currentUser?.ticketCreatedCount} Tickets Created!
+                        </Typography>
+                    </Box>
+                </Card>
+
+                {[
+                    { title: "Open Tickets", tickets: showLastThreeOpenTickets, color: "#81C784", hover: "#66BB6A", icon: "🟢", textColor: "#1B5E20", darkBg: "#263238", darkHover: "#66BB6A", darkText: "#C8E6C9" },
+                    { title: "In Progress", tickets: showLastThreeInProgressTickets, color: "#FFB74D", hover: "#FFB74D", icon: "🟠", textColor: "#E65100", darkBg: "#2C2C2C", darkHover: "#FFB74D", darkText: "#FFE0B2" },
+                    { title: "Closed Tickets", tickets: showLastThreeClosedTickets, color: "#EF9A9A", hover: "#EF5350", icon: "🔴", textColor: "#B71C1C", darkBg: "#4A2F2F", darkHover: "#EF5350", darkText: "#FFCDD2" },
+                ].map((section, i) => (
+                    <Box
+                        key={i}
                         sx={{
-                            borderRadius: 3,
-                            boxShadow: "0 6px 25px rgba(0,0,0,0.2)",
-                            background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
-                            color: "#f97316",
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "space-between",
-                            p: 3,
-                            transition: "transform 0.3s, box-shadow 0.3s",
                             width: "85%",
-                            "&:hover": {
-                                transform: "scale(1.05)",
-                                boxShadow: "0 10px 35px rgba(0,0,0,0.3)",
+                            p: 3,
+                            borderRadius: 3,
+                            bgcolor: section.color,
+                            boxShadow: 4,
+                            position: "relative",
+                            overflow: "hidden",
+                            "&:before": {
+                                content: '""',
+                                position: "absolute",
+                                width: "120%",
+                                height: "120%",
+                                bgcolor: section.color,
+                                top: "-50%",
+                                left: "-50%",
+                                transform: "rotate(45deg)",
+                                opacity: 0.1,
+                            },
+                            [theme => theme.palette.mode === "dark"]: {
+                                bgcolor: section.darkBg,
+                                "&:before": { bgcolor: section.darkBg, opacity: 0.1 },
                             },
                         }}
                     >
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                            <Typography variant="h6" sx={{ fontWeight: "bold" }}>✅</Typography>
-                            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>My Statistics</Typography>
-                        </Box>
-                        <Box sx={{ mt: 2 }}>
-                            <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                                {currentUser?.name} {currentUser?.surname}
-                            </Typography>
-                            <Typography variant="body2">{currentUser?.email}</Typography>
-                            <Typography variant="body">{currentUser?.role}</Typography>
-                            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                                {currentUser?.ticketCloseCount} Tickets Closed!
-                            </Typography>
-                        </Box>
-                    </Card>
-
-                    {/* Ticket Kartlarını Oluşturan Fonksiyon */}
-                    {[
-                        { title: "Open Tickets", tickets: showLastThreeOpenTickets, color: "#81C784", hover: "#66BB6A", icon: "🟢", textColor: "#1B5E20", darkBg: "#263238", darkHover: "#66BB6A", darkText: "#C8E6C9" },
-                        { title: "In Progress", tickets: showLastThreeInProgressTickets, color: "#FFB74D", hover: "#FFB74D", icon: "🟠", textColor: "#E65100", darkBg: "#2C2C2C", darkHover: "#FFB74D", darkText: "#FFE0B2" },
-                        { title: "Closed Tickets", tickets: showLastThreeClosedTickets, color: "#EF9A9A", hover: "#EF5350", icon: "🔴", textColor: "#B71C1C", darkBg: "#4A2F2F", darkHover: "#EF5350", darkText: "#FFCDD2" },
-                    ].map((section, i) => (
-                        <Box
-                            key={i}
+                        <Typography
+                            variant="h6"
                             sx={{
-                                width: "85%",
-                                p: 3,
-                                borderRadius: 3,
-                                bgcolor: section.color,
-                                boxShadow: 4,
-                                position: "relative",
-                                overflow: "hidden",
-                                "&:before": {
-                                    content: '""',
-                                    position: "absolute",
-                                    width: "120%",
-                                    height: "120%",
-                                    bgcolor: section.color,
-                                    top: "-50%",
-                                    left: "-50%",
-                                    transform: "rotate(45deg)",
-                                    opacity: 0.1,
-                                },
-                                [theme => theme.palette.mode === "dark"]: {
-                                    bgcolor: section.darkBg,
-                                    "&:before": { bgcolor: section.darkBg, opacity: 0.1 },
-                                },
+                                fontWeight: 700,
+                                mb: 2,
+                                color: theme => (theme.palette.mode === "dark" ? section.darkText : section.textColor),
                             }}
                         >
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    fontWeight: 700,
-                                    mb: 2,
-                                    color: theme => (theme.palette.mode === "dark" ? section.darkText : section.textColor),
-                                }}
-                            >
-                                {section.icon} {section.title}
-                            </Typography>
+                            {section.icon} {section.title}
+                        </Typography>
 
-                            {section.tickets.length > 0 ? (
-                                section.tickets.map((ticket, index) => (
-                                    <Box
-                                        key={index}
-                                        onClick={() => handleDetails(ticket._id)}
-                                        sx={{
-                                            mb: 1.5,
-                                            p: 1.5,
-                                            borderRadius: 2,
-                                            bgcolor: section.darkText,
-                                            display: "flex",
-                                            justifyContent: "space-between",
-                                            alignItems: "center",
-                                            transition: "0.2s",
-                                            "&:hover": {
-                                                bgcolor: theme => (theme.palette.mode === "dark" ? section.darkHover : section.hover),
-                                                cursor: "pointer",
-                                            },
-                                        }}
-                                    >
-                                        <Typography sx={{ fontWeight: 500, cursor: "pointer" }}>{ticket.title}</Typography>
-                                        <Typography sx={{ fontSize: 12, color: section.textColor, cursor: "pointer" }}>
-                                            {new Date(ticket.createdAt).toLocaleDateString()}
-                                        </Typography>
-                                    </Box>
-                                ))
-                            ) : (
-                                <Typography sx={{ color: section.textColor }}>No {section.title.toLowerCase()}</Typography>
-                            )}
-                        </Box>
-                    ))}
-                </Box>
+                        {section.tickets.length > 0 ? (
+                            section.tickets.map((ticket, index) => (
+                                <Box
+                                    key={index}
+                                    onClick={() => handleDetails(ticket._id, currentUserRole)}
+                                    sx={{
+                                        mb: 1.5,
+                                        p: 1.5,
+                                        borderRadius: 2,
+                                        bgcolor: section.darkText,
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        transition: "0.2s",
+                                        "&:hover": {
+                                            bgcolor: theme => (theme.palette.mode === "dark" ? section.darkHover : section.hover),
+                                            cursor: "pointer",
+                                        },
+                                    }}
+                                >
+                                    <Typography sx={{ fontWeight: 500, cursor: "pointer" }}>{ticket.title}</Typography>
+                                    <Typography sx={{ fontSize: 12, color: section.textColor, cursor: "pointer" }}>
+                                        {new Date(ticket.createdAt).toLocaleDateString()}
+                                    </Typography>
+                                </Box>
+                            ))
+                        ) : (
+                            <Typography sx={{ color: section.textColor }}>No {section.title.toLowerCase()}</Typography>
+                        )}
+                    </Box>
+                ))}
+            </Box>
             )}
+
 
         </>
     );

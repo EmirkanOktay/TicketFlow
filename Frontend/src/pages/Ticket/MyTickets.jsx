@@ -412,10 +412,12 @@ function MyTickets() {
                                                         <EditIcon />
                                                     </IconButton>
                                                 )}
+                                                {(ticket.status == "Open") && (
+                                                    <IconButton onClick={() => handleOpenDialog(ticket._id)} color="error">
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                )}
 
-                                                <IconButton onClick={() => handleOpenDialog(ticket._id)} color="error">
-                                                    <DeleteIcon />
-                                                </IconButton>
                                             </TableCell>
 
                                         </TableRow>
