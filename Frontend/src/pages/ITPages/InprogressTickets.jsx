@@ -8,6 +8,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from 'react-router-dom';
 import useLogo from '../../hooks/useLogo';
 import useDarkMode from '../../hooks/useDarkMode'
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 function InprogressTickets() {
     const { openDarkMode } = useDarkMode();
@@ -30,6 +32,7 @@ function InprogressTickets() {
     const [titleSort, setTitleSort] = useState(false);
     const [descriptionSort, setDescriptionSort] = useState(false);
     const [statusSort, setStatusSort] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
     const [prioritySort, setPrioritySort] = useState(0);
     const [categorySort, setCategorySort] = useState(0);
     const [createdBy, setCreatedBy] = useState(false);
@@ -63,6 +66,14 @@ function InprogressTickets() {
         ticket.createdBy?.name?.toLowerCase().includes(search.toLowerCase()) ||
         ticket.status?.toLowerCase().includes(search.toLowerCase())
     );
+
+    const ticketsPerPage = 10;
+    const pageCount = Math.ceil(filteredKey.length / ticketsPerPage) || 1;
+
+    const indexOfLastTicket = currentPage * ticketsPerPage;
+    const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
+    const currentTickets = filteredKey.slice(indexOfFirstTicket, indexOfLastTicket);
+
 
     const sortByTitle = () => {
         setTitleSort(!titleSort)
@@ -288,7 +299,7 @@ function InprogressTickets() {
                                 </TableHead>
 
                                 <TableBody>
-                                    {filteredKey.map((ticket, index) => (
+                                    {currentTickets.map((ticket, index) => (
                                         <TableRow key={ticket.id} hover>
                                             <TableCell>
                                                 <Box flex="flex" alignItems="center" gap={1.5}>
@@ -380,6 +391,23 @@ function InprogressTickets() {
                             </Table>
                         </TableContainer>
                     </CardContent>
+                    <Stack spacing={2}>
+                        <Pagination
+                            count={pageCount}
+                            page={currentPage}
+                            onChange={(_, value) => setCurrentPage(value)}
+                            showFirstButton
+                            showLastButton
+                            sx={{
+                                "& .MuiPaginationItem-root": {
+                                },
+                                "& .MuiPaginationItem-root.Mui-selected": {
+                                    backgroundColor: "#1e293b",
+                                    color: "#fff",
+                                },
+                            }}
+                        />
+                    </Stack>
                 </Card>
             </Box>
         </div>

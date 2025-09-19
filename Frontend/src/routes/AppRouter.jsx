@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "../pages/Dashboard/Index"
-import Ticket from '../pages/Dashboard/Tickets'
 import Profile from '../pages/Profile/MyProfile'
 import EditProfile from '../pages/Profile/EditProfile'
 import CreateTicket from '../pages/Ticket/CreatTicket'
@@ -78,19 +77,6 @@ const AppRouter = () => {
                     </PrivateRoute>
                 } />
             //dashboard page
-
-                <Route
-                    path="/dashboard/tickets"
-                    element={
-                        <PrivateRoute>
-                            <DashboardLayout>
-                                <Ticket />
-                            </DashboardLayout>
-                        </PrivateRoute>
-                    }
-                />
-
-            //dashboard tickets page
 
                 <Route
                     path="/profile"

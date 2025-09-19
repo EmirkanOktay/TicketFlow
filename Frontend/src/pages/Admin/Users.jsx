@@ -26,6 +26,8 @@ import {
     DialogTitle,
     Button,
     IconButton,
+    Stack,
+    Pagination
 } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
@@ -34,6 +36,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import Loading from "../../components/Loading";
 import useLogo from "../../hooks/useLogo";
 import useDarkMode from "../../hooks/useDarkMode";
+
 
 function Users() {
     const { logoWidth } = useLogo();
@@ -49,6 +52,7 @@ function Users() {
     const [createSort, setCreateSort] = useState(false);
     const [emailSort, setEmailSort] = useState(false);
     const [roleSort, setRoleSort] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1)
     const [createDate, setCrateDate] = useState(false)
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -109,6 +113,13 @@ function Users() {
             user.surname?.toLowerCase().includes(search.toLowerCase()) ||
             user.email?.toLowerCase().includes(search.toLowerCase())
     );
+
+    const ticketsPerPage = 10;
+    const pageCount = Math.ceil(filteredUsers.length / ticketsPerPage) || 1;
+
+    const indexOfLastTicket = currentPage * ticketsPerPage;
+    const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
+    const currentUsers = filteredUsers.slice(indexOfFirstTicket, indexOfLastTicket);
 
     const closedTicketSort = () => {
         setCloseSortClosed(!closeSortClosed)
@@ -225,7 +236,6 @@ function Users() {
                                 minWidth: 300,
                                 "& .MuiOutlinedInput-root": {
                                     borderRadius: 3,
-                                    backgroundColor: "#fff",
                                     boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                                 },
                             }}
@@ -257,7 +267,7 @@ function Users() {
                             </TableHead>
 
                             <TableBody>
-                                {filteredUsers.map((user) => (
+                                {currentUsers.map((user) => (
                                     <TableRow key={user._id} hover>
                                         <TableCell>
                                             <Box display="flex" alignItems="center" gap={1.5}>
@@ -307,6 +317,24 @@ function Users() {
                         </Table>
                     </TableContainer>
                 </CardContent>
+                <Stack spacing={2}>
+                    <Pagination
+                        count={pageCount}
+                        page={currentPage}
+                        onChange={(_, value) => setCurrentPage(value)}
+                        showFirstButton
+                        showLastButton
+                        sx={{
+                            "& .MuiPaginationItem-root": {
+                            },
+                            "& .MuiPaginationItem-root.Mui-selected": {
+                                backgroundColor: "#1e293b",
+                                color: "#fff",
+                            },
+                        }}
+                    />
+                </Stack>
+
             </Card>
 
             <Dialog
