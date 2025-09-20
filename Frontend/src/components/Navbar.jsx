@@ -51,6 +51,11 @@ const Navbar = () => {
 
     const handleNotifMenuClose = () => setAnchorElNotif(null);
 
+    const notifyToTicket = (id) => {
+        setAnchorElNotif(null)
+        navigate(`/ticket/my-tickets/ticket-details/${id}`)
+    }
+
     useEffect(() => {
         dispatch(getUserInfos())
             .unwrap()
@@ -131,7 +136,7 @@ const Navbar = () => {
                             notifications.map((n) => (
                                 <MenuItem
                                     key={n._id}
-                                    onClick={handleNotifMenuClose}
+                                    onClick={() => { notifyToTicket(n.link) }}
                                     sx={{
                                         flexDirection: "column",
                                         alignItems: "flex-start",
@@ -204,7 +209,7 @@ const Navbar = () => {
                             {userRole === "Admin" && (
                                 <MenuItem component={Link} to="/admin/create-user" onClick={() => setAnchorEl(null)}>Create User</MenuItem>
                             )}
-                            <MenuItem component={Link} to="/support" onClick={() => setAnchorEl(null)}>Support</MenuItem>
+                            <MenuItem component={Link} to="/dashboard/support" onClick={() => setAnchorEl(null)}>Support</MenuItem>
                             <MenuItem onClick={logoutHandler}>Logout</MenuItem>
                         </Menu>
                     </Box>
