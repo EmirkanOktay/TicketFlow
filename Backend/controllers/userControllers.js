@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Notification = require("../models/notificationModel")
 
 const register = async (req, res, next) => {
 
@@ -22,6 +23,14 @@ const register = async (req, res, next) => {
             password: hash,
             role
         })
+
+        const sendNotifyToNewUser = new Notification({
+            userId: user._id,
+            title: "Welcome To TicketFlow",
+            message: `Welcome To TicketFlow: ${user.name}`,
+        });
+        await sendNotifyToNewUser.save();
+
         if (user.role == "It") {
             user.ticketCloseCount = 0;
         }
@@ -38,10 +47,12 @@ const register = async (req, res, next) => {
                 role: user.role,
                 token: jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" }),
                 ticketCreatedCount: (user.role == 'Employee') ? user.ticketCreatedCount : null,
-                ticketCloseCount: (user.role == 'It') ? user.ticketCloseCount : null
-
+                ticketCloseCount: (user.role == 'It') ? user.ticketCloseCount : null,
+                notifyForNewUser: sendNotifyToNewUser
             })
+
             console.log("user created!")
+
         }
         else {
             res.status(400).json({ message: "invalid user data" })
@@ -93,12 +104,12 @@ const login = async (req, res, next) => {
                 name: user.name,
                 surname: user.surname,
                 role: user.role,
-                token
-            }
+                token,
+            },
         });
     } catch (error) {
         console.log("login error:", error);
-        return res.status(500).json({ message: "Server error" });
+        return res.status(500).json({ message: "Server error", });
     }
 }
 
@@ -127,7 +138,15 @@ const deleteUser = async (req, res, next) => {
         if (!user) return res.status(404).json({ message: "User not found" });
 
         await user.deleteOne();
-        res.status(200).json({ message: "User deleted successfully" });
+
+        const sendNotify = new Notification({
+            userId: req.user.id,
+            title: "User Has Been Deleted",
+            message: `User has been deleted: ${user.name}`,
+        });
+
+        await sendNotify.save();
+        res.status(200).json({ message: "User deleted successfully", notify: sendNotify });
 
     } catch (error) {
         console.log("delete error " + error);
@@ -155,7 +174,14 @@ const editUser = async (req, res, next) => {
         if (role) user.role = role;
 
         await user.save();
-        res.status(200).json({ message: "User updated successfully", user });
+        const sendNotify = new Notification({
+            userId: req.user.id,
+            title: "User Has Been Updated",
+            message: `User has been Updated: ${user.name}`,
+        });
+
+        await sendNotify.save();
+        res.status(200).json({ message: "User updated successfully", user, notify: sendNotify });
 
     } catch (error) {
         console.error("Error editing user:", error);

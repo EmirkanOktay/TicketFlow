@@ -3,6 +3,7 @@ require("dotenv").config();
 require("../Backend/config/db");
 const userRouter = require("../Backend/router/userRouter");
 const ticketRouter = require("../Backend/router/ticketRouter");
+const notifyRouter = require("../Backend/router/notificationsRouter");
 const session = require("express-session");
 const passport = require("passport");
 const cookie = require("cookie-parser");
@@ -39,6 +40,7 @@ app.use((err, req, res, next) => {
 
 app.use("/api/users", userRouter)
 app.use("/api/tickets", ticketRouter)
+app.use("/api/notifications", notifyRouter)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 //routers

@@ -10,7 +10,8 @@ export const createTicket = createAsyncThunk(
                 ticketData,
                 { withCredentials: true }
             );
-            if (res.status === 201) return res.data.ticket;
+            if (res.status === 201) return res.data;
+
             return rejectWithValue("Ticket creation failed");
         } catch (err) {
             return rejectWithValue(err.response?.data?.message || err.message);
@@ -110,9 +111,6 @@ export const inProgressTicket = createAsyncThunk(
     }
 );
 
-
-
-
 const initialState = {
     ticket: null,
     loading: false,
@@ -150,6 +148,8 @@ const ticketSlice = createSlice({
             });
     }
 });
+
+
 
 export const { resetTicketState } = ticketSlice.actions;
 export default ticketSlice.reducer;

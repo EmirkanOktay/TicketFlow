@@ -120,7 +120,7 @@ export const registerUser = createAsyncThunk(
                 { withCredentials: true }
             );
 
-            if (res.status === 201) return res.data.user;
+            if (res.status === 201) return res.data;
             return rejectWithValue("Registration failed");
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || error.message);
@@ -134,6 +134,7 @@ const initialState = {
         : null,
     loading: false,
     error: null,
+    notifications: [],
 };
 
 const userSlice = createSlice({

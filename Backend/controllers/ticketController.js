@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const User = require("../models/userModel");
 const sendMail = require("../utils/sendMail");
+const Notification = require("../models/notificationModel")
 
 const createTicket = async (req, res, next) => {
     const user = await User.findById(req.user.id);
@@ -34,9 +35,19 @@ const createTicket = async (req, res, next) => {
         const populatedTicket = await Ticket.findById(ticket._id)
             .populate("createdBy", "name surname email role");
 
+        const sendNotify = new Notification({
+            userId: req.user.id,
+            title: "Ticket Has Been Created Succesfully",
+            message: "Your ticket has been created. You can check your ticket situation on my tickets panel",
+            link: ticket._id
+        })
 
+        await sendNotify.save();
 
-        res.status(201).json(populatedTicket);
+        res.status(201).json({
+            ticket: populatedTicket,
+            notify: sendNotify
+        });
         console.log("ticket created!");
 
         // await sendMail({
@@ -132,7 +143,22 @@ const uptadeTicket = async (req, res, next) => {
         if (priority) ticket.priority = priority;
         if (status) ticket.status = status;
         await ticket.save()
-        res.status(200).json({ message: "Ticket updated", ticket });
+
+        let sendNotifyToEmployee;
+
+        if (userRole === "Employee") {
+            sendNotifyToEmployee = req.user.id;
+        }
+
+        const sendNotify = new Notification({
+            userId: sendNotifyToEmployee || req.user.id,
+            title: "Ticket Has Been Uptaded Succesfully",
+            message: `"${ticket.title} ticket has been uptaded. You can check your ticket situation on my tickets panel`,
+            link: ticket._id
+        })
+
+        await sendNotify.save();
+        res.status(200).json({ message: "Ticket updated", ticket, notify: sendNotify });
 
     }
     catch (error) {
@@ -188,10 +214,18 @@ const closeTicket = async (req, res, next) => {
 
         ticket.closeDuration = `${hours}h ${minutes}m ${seconds}s`;
 
-
         await ticket.save();
         const populatedTicket = await Ticket.findById(ticket._id)
             .populate("closedBy", "name surname email role");
+
+        const sendNotify = new Notification({
+            userId: ticket.createdBy,
+            title: "Ticket Has Been Closed",
+            message: `Your ticket has been closed.\n${ticket.result}\nYou can check your ticket situation on my tickets panel`,
+            link: ticket._id
+        });
+
+        await sendNotify.save();
 
 
         // await sendMail({
@@ -209,7 +243,7 @@ const closeTicket = async (req, res, next) => {
         // });
 
 
-        res.status(200).json({ message: "Ticket closed", populatedTicket });
+        res.status(200).json({ message: "Ticket closed", populatedTicket, notify: sendNotify });
 
     } catch (error) {
         console.error("Ticket close error:", error);
@@ -250,13 +284,21 @@ const inProgresss = async (req, res, next) => {
         ticket.status = "In-progress";
         await ticket.save();
 
-        res.status(200).json(ticket);
+        const sendNotify = new Notification({
+            userId: ticket.createdBy,
+            title: "Ticket Has Been Closed",
+            message: `Your ticket ${ticket.title} has been in progress.\nYou can check your ticket situation on my tickets panel`,
+            link: ticket._id
+        });
+
+        await sendNotify.save();
+
+        res.status(200).json({ ticket, notify: sendNotify });
     } catch (error) {
         console.error("Ticket in-progress error:", error);
         res.status(500).json({ message: "Server error" });
     }
 };
-
 
 
 const deleteTicket = async (req, res, next) => {
@@ -282,7 +324,17 @@ const deleteTicket = async (req, res, next) => {
                 }
 
                 await ticket.deleteOne();
-                return res.status(200).json({ message: "Ticket Deleted " });
+
+                const sendNotify = new Notification({
+                    userId: req.user.id,
+                    title: "Ticket Has Been Deleted",
+                    message: `Ticket has been deleted: ${ticket.title}`,
+                    link: ticket._id
+                });
+
+                await sendNotify.save();
+                return res.status(200).json({ message: "Ticket Deleted ", notify: sendNotify });
+
 
             } else {
                 return res.status(404).json({ message: "Ticket not found" });
