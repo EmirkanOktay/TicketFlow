@@ -56,8 +56,4 @@ app.listen(PORT, () => {
     console.log(`Server established on port ${PORT}`)
 })
 
-app.listen(PORT, () => {
-    console.log("server establiashed")
-})
-
 //server
