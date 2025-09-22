@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 app.use(cookie());
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://ticket-flow-pzdv.vercel.app/",
     credentials: true,
 }))
 app.use(session({
