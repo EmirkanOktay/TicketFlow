@@ -15,32 +15,22 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 app.use(cookie());
 
-const allowedOrigins = [
-    "http://localhost:5173",
-    "https://ticket-flow-pzdv.vercel.app"
-];
-
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = "The CORS policy for this site does not allow access from the specified Origin.";
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    },
+    origin: "https://ticket-flow-pzdv.vercel.app",
     credentials: true
 }));
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     saveUninitialized: false,
     resave: false,
     cookie: {
         httpOnly: true,
-        secure: false,
-        maxAge: 24 * 60 * 60 * 1000 // 1 day
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000
     }
-}))
+}));
+
 
 app.use(passport.initialize());
 app.use(passport.session());
