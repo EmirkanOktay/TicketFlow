@@ -7,7 +7,7 @@ import TicketDetail from '../pages/Ticket/TicketDetail'
 import NotFound from '../pages/notFound'
 import Login from '../pages/auth/Login'
 import Register from '../pages/Admin/Register'
-import ChangePassword from '../pages/auth/changePassword'
+import ChangePassword from "../pages/auth/ChangePassword";
 import PrivateRoute from '../routes/PrivateRouter'
 import AuhtLayout from '../layouts/AuthLayout'
 import DashboardLayout from '../layouts/DashboardLayout'

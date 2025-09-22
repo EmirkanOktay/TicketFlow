@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { resetPassword } from "../../api/UserRedux";
 import { toast } from "react-toastify";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import { resetPasswordSchema } from "../../validations/userSchema";
 
 const ChangePassword = () => {
