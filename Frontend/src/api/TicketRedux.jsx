@@ -6,7 +6,7 @@ export const createTicket = createAsyncThunk(
     async (ticketData, { rejectWithValue }) => {
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/tickets/create-ticket",
+                "https://ticketflow-o5zj.onrender.com/api/tickets/create-ticket",
                 ticketData,
                 { withCredentials: true }
             );
@@ -23,7 +23,7 @@ export const getAllTickets = createAsyncThunk(
     "ticket/getAllTickets",
     async (_, { rejectWithValue }) => {
         try {
-            const res = await axios.get("http://localhost:5000/api/tickets/show-tickets", { withCredentials: true })
+            const res = await axios.get("https://ticketflow-o5zj.onrender.com/api/tickets/show-tickets", { withCredentials: true })
             if (res.status === 200) return res.data
             return rejectWithValue("Error");
         } catch (error) {
@@ -36,7 +36,7 @@ export const deleteTicket = createAsyncThunk(
     "ticket/deleteTicket",
     async (id, { rejectWithValue }) => {
         try {
-            const res = await axios.delete(`http://localhost:5000/api/tickets/delete-ticket/${id}`, { withCredentials: true })
+            const res = await axios.delete(`https://ticketflow-o5zj.onrender.com/api/tickets/delete-ticket/${id}`, { withCredentials: true })
             if (res.status == 200) return res.data;
             return rejectWithValue("Error");
         } catch (error) {
@@ -50,7 +50,7 @@ export const editTicket = createAsyncThunk(
     async ({ id, ticketData }, { rejectWithValue }) => {
         try {
             const res = await axios.put(
-                `http://localhost:5000/api/tickets/edit-ticket/${id}`,
+                `https://ticketflow-o5zj.onrender.com/api/tickets/edit-ticket/${id}`,
                 ticketData,
                 { withCredentials: true }
             );
@@ -68,7 +68,7 @@ export const getTicketById = createAsyncThunk(
     "ticket/getTicketById",
     async (id, { rejectWithValue }) => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/tickets/get-ticket/${id}`, { withCredentials: true });
+            const res = await axios.get(`https://ticketflow-o5zj.onrender.com/api/tickets/get-ticket/${id}`, { withCredentials: true });
             return res.data;
         } catch (err) {
             return rejectWithValue(err.response?.data?.message || "Failed to fetch ticket");
@@ -81,7 +81,7 @@ export const closeTicket = createAsyncThunk(
     async ({ id, result }, { rejectWithValue }) => {
         try {
             const res = await axios.put(
-                `http://localhost:5000/api/tickets/close-ticket/${id}`,
+                `https://ticketflow-o5zj.onrender.com/api/tickets/close-ticket/${id}`,
                 { result },
                 { withCredentials: true }
             );
@@ -98,7 +98,7 @@ export const inProgressTicket = createAsyncThunk(
     async ({ id }, { rejectWithValue }) => {
         try {
             const res = await axios.put(
-                `http://localhost:5000/api/tickets/in-progress-ticket/${id}`,
+                `https://ticketflow-o5zj.onrender.com/api/tickets/in-progress-ticket/${id}`,
                 {},
                 { withCredentials: true }
             );

@@ -5,7 +5,7 @@ export const getAllNotifications = createAsyncThunk(
     "notifications/getAllNotifications",
     async (_, { rejectWithValue }) => {
         try {
-            const res = await axios.get("http://localhost:5000/api/notifications/show-all-notifications", { withCredentials: true });
+            const res = await axios.get("https://ticketflow-o5zj.onrender.com/api/notifications/show-all-notifications", { withCredentials: true });
             if (res.status === 200) return res.data.notifications;
             return rejectWithValue("Error");
         } catch (error) {
@@ -18,7 +18,7 @@ export const markAllNotificationsRead = createAsyncThunk(
     "notifications/markAllNotificationsRead",
     async (_, { rejectWithValue }) => {
         try {
-            const res = await axios.put("http://localhost:5000/api/notifications/markRead", {}, { withCredentials: true });
+            const res = await axios.put("https://ticketflow-o5zj.onrender.com/api/notifications/markRead", {}, { withCredentials: true });
             if (res.status === 200) return res.data.notifications;
             return rejectWithValue("Error marking notifications");
         } catch (error) {
