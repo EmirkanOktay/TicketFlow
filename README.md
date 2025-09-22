@@ -51,7 +51,7 @@ TicketFlow is designed to make internal support requests more consistent and tra
 ---
 
 ## Tech Stack
-- **Frontend:** React (CRA or Vite)
+- **Frontend:** React (Vite)
 - **Backend:** Node.js, Express
 - **Database:** MongoDB (Mongoose)
 - **Authentication:** JWT
@@ -175,4 +175,5 @@ For questions or suggestions, please contact via GitHub.
 ---
 
 **Happy coding!**
+
 
