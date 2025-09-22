@@ -15,7 +15,7 @@ import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NightlightRoundIcon from "@mui/icons-material/NightlightRound";
-import SunnyIcon from "@mui/icons-material/Sunny";
+import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -111,7 +111,7 @@ const Navbar = () => {
                         sx={{ width: "0px", minWidth: 30, padding: 0, "&:hover": { color: "#f97316" } }}
                         onClick={handleDarkMode}
                     >
-                        {openDarkMode ? <SunnyIcon /> : <NightlightRoundIcon />}
+                        {openDarkMode ? <WbSunnyIcon /> : <NightlightRoundIcon />}
                     </Button>
 
                     <Button color="inherit" sx={{ width: "30px", minWidth: 0, padding: 0, "&:hover": { color: "#f97316" } }} onClick={handleNotifMenuOpen}>
